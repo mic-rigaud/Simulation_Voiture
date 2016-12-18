@@ -29,6 +29,7 @@ public class Main {
 		// Initialisation de l'ensemble des loggers
 		Logger.Init(engine, loggersNames, true);
 
+		@SuppressWarnings("unused")
 		EnvironementEntity env = new EnvironementEntity(engine);
 
 		engine.initialize();

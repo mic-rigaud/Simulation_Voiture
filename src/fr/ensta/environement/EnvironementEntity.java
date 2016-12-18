@@ -7,6 +7,7 @@ import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
 import fr.ensta.element.IElement;
 import fr.ensta.element.noeud.INoeud;
+import fr.ensta.element.noeud.intersection.Stop;
 import fr.ensta.element.noeud.pointEntreSortie.PointES;
 import fr.ensta.element.route.Route;
 import fr.ensta.element.voiture.VoitureEntity;
@@ -39,15 +40,19 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 
 	private void initialiserPlateau() {
 		PointES E1 = new PointES();
+		Stop st = new Stop();
 		PointES E2 = new PointES();
-		Route rt = new Route(5);
-		E1.ajouterConnexion(rt, IElement.GAUCHE);
-		rt.ajouterConnexion(E1, IElement.GAUCHE);
-		rt.ajouterConnexion(E2, IElement.DROITE);
-		E2.ajouterConnexion(rt, IElement.DROITE);
+		Route rt1 = new Route(5);
+		Route rt2 = new Route(5);
+		E1.connecter(rt1, IElement.DROITE);
+		st.connecter(rt1, IElement.GAUCHE);
+		st.connecter(rt2, IElement.DROITE);
+		E2.connecter(rt2, IElement.GAUCHE);
 		noeuds.add(E1);
+		noeuds.add(st);
 		noeuds.add(E2);
-		route.add(rt);
+		route.add(rt1);
+		route.add(rt2);
 	}
 
 	@Override
@@ -77,24 +82,24 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 
 	@Override
 	public String[] getTitles() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public String[] getRecords() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	@Override
 	public String getClassement() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	public void creerVoiture() {
-		VoitureEntity voiture = new VoitureEntity(engine, "voiture", (PointES) noeuds.get(0), (PointES) noeuds.get(1));
+		VoitureEntity voiture = new VoitureEntity(engine, "voiture", (PointES) noeuds.get(0), (PointES) noeuds.get(2));
 		voitures.add(voiture);
 		Logger.Information(this, "info", "Voiture cree");
 		voiture.addEvent(new DeplacerVoiture(getEngine().SimulationDate(), voiture));

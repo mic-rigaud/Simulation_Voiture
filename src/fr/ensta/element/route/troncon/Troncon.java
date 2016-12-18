@@ -7,7 +7,7 @@ import fr.ensta.element.voiture.Voiture;
 
 public class Troncon implements IElement {
 
-	private int longueur;
+	// private int longueur;
 	private HashMap<Integer, Voiture> voitures;
 
 	public Troncon() {
@@ -31,13 +31,14 @@ public class Troncon implements IElement {
 		return;
 	}
 
+	public boolean contientVoiture(Voiture voiture) {
+		return voitures.containsValue(voiture);
+	}
+
 	@Override
 	public void ajouterConnexion(IElement element, int direction) {
 		// TODO Auto-generated method stub
-	}
 
-	public boolean contientVoiture(Voiture voiture) {
-		return voitures.containsValue(voiture);
 	}
 
 }

@@ -23,9 +23,9 @@ public class Route implements IElement {
 	public void entreVoiture(Voiture voiture) {
 		int direction = voiture.getDirection();
 		voiture.setPosition(this);
-		if (direction == GAUCHE || direction == HAUT) {
+		if (direction < DIAG_MONTANTE) {
 			route.getFirst().entreVoiture(voiture);
-		} else if (direction == DROITE || direction == BAS) {
+		} else if (direction > DIAG_MONTANTE) {
 			route.getLast().entreVoiture(voiture);
 		}
 		Logger.Information(this, "info", "Voiture entre dans la route");
@@ -33,9 +33,9 @@ public class Route implements IElement {
 
 	@Override
 	public void ajouterConnexion(IElement element, int direction) {
-		if (direction == GAUCHE || direction == HAUT) {
+		if (direction > DIAG_MONTANTE) {
 			connexion.put(ENTRE, element);
-		} else if (direction == DROITE || direction == BAS) {
+		} else if (direction < DIAG_MONTANTE) {
 			connexion.put(SORTIE, element);
 		}
 
@@ -43,24 +43,20 @@ public class Route implements IElement {
 
 	@Override
 	public void deplacerVoiture(Voiture voiture) {
-		Logger.Information(this, "info",
-				"Voiture va etre deplace, direction " + String.valueOf(voiture.getDirection()));
 		int index = 0;
 		for (Troncon tr : route) {
 			if (tr.contientVoiture(voiture)) {
-				Logger.Information(this, "info", "Voiture est contenu par l indice " + String.valueOf(index));
-				if (index == (route.size() - 1)
-						&& (voiture.getDirection() == GAUCHE || voiture.getDirection() == HAUT)) {
+				Logger.Information(this, "info", "Voiture est sur le troncon " + String.valueOf(index));
+				if (index == (route.size() - 1) && (voiture.getDirection() < DIAG_MONTANTE)) {
 					connexion.get(SORTIE).entreVoiture(voiture);
-				} else if (index == 0 && (voiture.getDirection() == DROITE || voiture.getDirection() == BAS)) {
+				} else if (index == 0 && (voiture.getDirection() > DIAG_MONTANTE)) {
 					connexion.get(ENTRE).entreVoiture(voiture);
 				} else {
 					// TODO: gerer le cas ou le troncon est occupe
-					if (voiture.getDirection() == DROITE || voiture.getDirection() == BAS)
+					if (voiture.getDirection() > DIAG_MONTANTE)
 						route.get(--index).entreVoiture(voiture);
-					else if (voiture.getDirection() == GAUCHE || voiture.getDirection() == HAUT)
+					else if (voiture.getDirection() < DIAG_MONTANTE)
 						route.get(++index).entreVoiture(voiture);
-					Logger.Information(this, "info", "Voiture change de troncon");
 				}
 				tr.deplacerVoiture(voiture);
 				return;
