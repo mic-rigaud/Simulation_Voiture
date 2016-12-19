@@ -47,4 +47,8 @@ public class Voiture {
 		return arrive.equals(position);
 	}
 
+	public String getArrive() {
+		return arrive.getNom();
+	}
+
 }

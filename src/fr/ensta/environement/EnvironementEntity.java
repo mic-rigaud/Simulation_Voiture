@@ -1,12 +1,12 @@
 package fr.ensta.environement;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
 import fr.ensta.element.IElement;
-import fr.ensta.element.noeud.INoeud;
 import fr.ensta.element.noeud.intersection.Stop;
 import fr.ensta.element.noeud.pointEntreSortie.PointES;
 import fr.ensta.element.route.Route;
@@ -19,16 +19,16 @@ import fr.ensta.lerouxlu.simu.impl.SimEntity;
 public class EnvironementEntity extends SimEntity implements IRecordable {
 
 	private ArrayList<VoitureEntity> voitures;
-	private ArrayList<INoeud> noeuds;
-	private ArrayList<Route> route;
+	private ArrayList<PointES> pointESs;
 	private SimEngine engine;
+	private Random rdm;
 
 	public EnvironementEntity(SimEngine engine) {
 		super(engine, "Environement");
 		this.engine = engine;
-		noeuds = new ArrayList<INoeud>();
-		route = new ArrayList<Route>();
+		pointESs = new ArrayList<PointES>();
 		voitures = new ArrayList<VoitureEntity>();
+		rdm = new Random();
 	}
 
 	@Override
@@ -39,20 +39,57 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 	}
 
 	private void initialiserPlateau() {
-		PointES E1 = new PointES();
-		Stop st = new Stop();
-		PointES E2 = new PointES();
-		Route rt1 = new Route(5);
-		Route rt2 = new Route(5);
-		E1.connecter(rt1, IElement.DROITE);
-		st.connecter(rt1, IElement.GAUCHE);
-		st.connecter(rt2, IElement.DROITE);
-		E2.connecter(rt2, IElement.GAUCHE);
-		noeuds.add(E1);
-		noeuds.add(st);
-		noeuds.add(E2);
-		route.add(rt1);
-		route.add(rt2);
+		PointES E1 = new PointES("P1");
+		PointES E2 = new PointES("P2");
+		PointES E3 = new PointES("P3");
+		PointES E4 = new PointES("P4");
+		PointES E5 = new PointES("P5");
+		PointES E6 = new PointES("P6");
+		PointES E7 = new PointES("P7");
+		Stop st1 = new Stop("I1");
+		Stop st2 = new Stop("I2");
+		Stop st3 = new Stop("I3"); // TODO: changer en feu
+		Stop st4 = new Stop("I4");
+		Route rt11 = new Route(5, "R1.1");
+		Route rt12 = new Route(2, "R1.2");
+		Route rt13 = new Route(2, "R1.3");
+		Route rt2 = new Route(2, "R2");
+		Route rt21 = new Route(5, "R2.2");
+		Route rt22 = new Route(2, "R2.2");
+		Route rt23 = new Route(2, "R2.3");
+		Route rt31 = new Route(3, "R3.2");
+		Route rt32 = new Route(3, "R3.2");
+		Route rt4 = new Route(3, "R4");
+
+		E1.connecter(rt11, IElement.DROITE);
+		E2.connecter(rt2, IElement.HAUT);
+		E3.connecter(rt13, IElement.GAUCHE);
+		E4.connecter(rt23, IElement.GAUCHE);
+		E5.connecter(rt21, IElement.DROITE);
+		E6.connecter(rt32, IElement.BAS);
+		E7.connecter(rt4, IElement.BAS);
+
+		st1.connecter(rt11, IElement.GAUCHE);
+		st1.connecter(rt12, IElement.DROITE);
+		st1.connecter(rt31, IElement.HAUT);
+		st2.connecter(rt12, IElement.GAUCHE);
+		st2.connecter(rt13, IElement.DROITE);
+		st2.connecter(rt2, IElement.BAS);
+		st3.connecter(rt22, IElement.GAUCHE);
+		st3.connecter(rt23, IElement.DROITE);
+		st3.connecter(rt4, IElement.HAUT);
+		st4.connecter(rt21, IElement.GAUCHE);
+		st4.connecter(rt22, IElement.DROITE);
+		st4.connecter(rt32, IElement.HAUT);
+		st4.connecter(rt31, IElement.BAS);
+
+		pointESs.add(E1);
+		pointESs.add(E2);
+		pointESs.add(E3);
+		pointESs.add(E4);
+		pointESs.add(E5);
+		pointESs.add(E6);
+		pointESs.add(E7);
 	}
 
 	@Override
@@ -99,7 +136,14 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 	}
 
 	public void creerVoiture() {
-		VoitureEntity voiture = new VoitureEntity(engine, "voiture", (PointES) noeuds.get(0), (PointES) noeuds.get(2));
+		int entre = rdm.nextInt(pointESs.size());
+		int sortie = entre;
+		while (sortie == entre) {
+			sortie = rdm.nextInt(pointESs.size());
+		}
+		Logger.Information(this, "info",
+				"Voiture cree entre :" + String.valueOf(entre + 1) + " sortie : " + String.valueOf(sortie + 1));
+		VoitureEntity voiture = new VoitureEntity(engine, "voiture", pointESs.get(entre), pointESs.get(sortie));
 		voitures.add(voiture);
 		Logger.Information(this, "info", "Voiture cree");
 		voiture.addEvent(new DeplacerVoiture(getEngine().SimulationDate(), voiture));

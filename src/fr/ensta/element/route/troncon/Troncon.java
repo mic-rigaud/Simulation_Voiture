@@ -2,6 +2,7 @@ package fr.ensta.element.route.troncon;
 
 import java.util.HashMap;
 
+import fr.ensta.element.ElementOccupeException;
 import fr.ensta.element.IElement;
 import fr.ensta.element.voiture.Voiture;
 
@@ -15,12 +16,13 @@ public class Troncon implements IElement {
 	}
 
 	@Override
-	public void entreVoiture(Voiture voiture) {
+	public void entreVoiture(Voiture voiture) throws ElementOccupeException {
 		int direction = voiture.getDirection();
 		if (!voitures.containsKey(direction)) {
 			voitures.put(direction, voiture);
+			voiture.setVitesse(VITESSE_REGLEMENTAIRE);
 		} else {
-			// TODO: lever une exception!!
+			throw new ElementOccupeException();
 		}
 
 	}
@@ -35,10 +37,17 @@ public class Troncon implements IElement {
 		return voitures.containsValue(voiture);
 	}
 
+	public boolean contientVoiture(int direction) {
+		return voitures.containsKey(direction);
+	}
+
+	public boolean isEmpty() {
+		return voitures.isEmpty();
+	}
+
 	@Override
 	public void ajouterConnexion(IElement element, int direction) {
-		// TODO Auto-generated method stub
-
+		// Les troncon n'ont pas de connexion donc pas besoin d implementer
 	}
 
 }

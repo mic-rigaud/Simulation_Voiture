@@ -14,7 +14,7 @@ public interface IElement {
 	public static final int SORTIE = 5;
 	public static final int VITESSE_REGLEMENTAIRE = 50;
 
-	void entreVoiture(Voiture voiture);
+	void entreVoiture(Voiture voiture) throws ElementOccupeException;
 
 	void deplacerVoiture(Voiture voiture);
 
