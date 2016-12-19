@@ -10,6 +10,7 @@ public class Troncon implements IElement {
 
 	// private int longueur;
 	private HashMap<Integer, Voiture> voitures;
+	public static int longeur = 9;
 
 	public Troncon() {
 		voitures = new HashMap<Integer, Voiture>();
@@ -22,7 +23,7 @@ public class Troncon implements IElement {
 			voitures.put(direction, voiture);
 			voiture.setVitesse(VITESSE_REGLEMENTAIRE);
 		} else {
-			throw new ElementOccupeException();
+			throw new ElementOccupeException(voiture.nom, voitures.get(direction).nom);
 		}
 
 	}

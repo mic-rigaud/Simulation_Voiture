@@ -28,12 +28,10 @@ public class Stop implements IIntersection {
 		try {
 			voiture.setPosition(this);
 			decoupe.get(-voiture.getDirection()).entreVoiture(voiture);
-			voiture.setVitesse(0);
-			Logger.Information(this, "info", "Voiture arrive sur le stop " + nom);
+			voiture.setVitesse(25);
+			Logger.Information(this, "info", voiture.nom + " arrive sur le stop " + nom);
 		} catch (ElementOccupeException e) {
-			Logger.Warning(this, "info", e.toString());
-			e.printStackTrace();
-			throw new ElementOccupeException();
+			throw new ElementOccupeException(e.getMessage() + " dans le stop");
 		}
 	}
 
@@ -45,26 +43,34 @@ public class Stop implements IIntersection {
 				int position = e.getKey();
 				Troncon tr = e.getValue();
 				if (tr.contientVoiture(voiture)) {
-					// Logger.Information(this, "info", "Voiture est sur le
-					// troncon " + String.valueOf(position));
 					if (position == direction) {
 						connections.get(direction).entreVoiture(voiture);
+						tr.deplacerVoiture(voiture);
 					} else if (position == 0) {
 						decoupe.get(direction).entreVoiture(voiture);
+						voiture.setVitesse(VITESSE_REGLEMENTAIRE);
+						tr.deplacerVoiture(voiture);
 					} else {
-						// TODO: change la direction de la voiture
+						if (voiture.getVitesse() != 0) {
+							voiture.setVitesse(0);
+							return;
+						}
 						int newDirection = getNewDirection(this.nom, voiture.getArrive());
 						IntersectionLibre(position, newDirection);
+						tr.deplacerVoiture(voiture);
 						voiture.setDirection(newDirection);
-						voiture.setVitesse(VITESSE_REGLEMENTAIRE);
+						voiture.setVitesseDemarage();
 						decoupe.get(0).entreVoiture(voiture);
 					}
-					tr.deplacerVoiture(voiture);
 				}
 			}
 		} catch (ElementOccupeException e) {
-			Logger.Warning(this, "info", e.toString());
-			e.printStackTrace();
+			// TODO:Il va falloir gerer la deceleration pour s arreter puisqu un
+			// autre utilisateur est devant
+			voiture.setVitesse(0);
+			voiture.setPosition(this);
+			Logger.Error(this, "info", e.toString());
+
 		}
 	}
 
@@ -73,7 +79,7 @@ public class Stop implements IIntersection {
 	// intersection si il y personne. C'est trop simplifie...
 	private void IntersectionLibre(int position, int newDirection) throws ElementOccupeException {
 		if (!decoupe.get(0).isEmpty())
-			throw new ElementOccupeException();
+			throw new ElementOccupeException("intersection non libre");
 	}
 
 	@Override

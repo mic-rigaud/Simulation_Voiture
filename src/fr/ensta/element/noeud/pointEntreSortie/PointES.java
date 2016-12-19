@@ -26,19 +26,20 @@ public class PointES implements INoeud {
 	public void entreVoiture(Voiture voiture) {
 		voiture.setPosition(this);
 		voiture.setVitesse(0);
-		Logger.Information(this, "info", "Voiture est arrivee au point " + nom);
+		Logger.Information(this, "info", voiture.nom + " est arrivee au point " + nom);
 	}
 
 	@Override
 	public void deplacerVoiture(Voiture voiture) {
 		try {
-			Logger.Information(this, "info", "Voiture viens de partir du point " + nom);
+			Logger.Information(this, "info", voiture.nom + " viens de partir du point " + nom);
 			voiture.setDirection(direction);
 			entre.entreVoiture(voiture);
 			voiture.setVitesse(VITESSE_REGLEMENTAIRE);
 		} catch (ElementOccupeException e) {
-			Logger.Warning(this, "info", e.toString());
-			e.printStackTrace();
+			voiture.setVitesse(0);
+			voiture.setPosition(this);
+			Logger.Error(this, "info", e.toString());
 		}
 	}
 

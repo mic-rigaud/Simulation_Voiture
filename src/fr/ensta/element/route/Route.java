@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import enstabretagne.base.utility.Logger;
 import fr.ensta.element.ElementOccupeException;
 import fr.ensta.element.IElement;
+import fr.ensta.element.noeud.pointEntreSortie.PointES;
 import fr.ensta.element.route.troncon.Troncon;
 import fr.ensta.element.voiture.Voiture;
 
@@ -15,10 +16,11 @@ public class Route implements IElement {
 	private HashMap<Integer, IElement> connexion;
 	private String nom;
 
-	public Route(int nbrTroncon, String nom) {
+	public Route(int longeur, String nom) {
+		int nbrTroncon = longeur / Troncon.longeur;
 		route = new LinkedList<Troncon>();
 		connexion = new HashMap<Integer, IElement>();
-		ajouterTroncon(nbrTroncon);
+		ajouterTroncon(nbrTroncon - 2);
 		this.nom = nom;
 	}
 
@@ -32,14 +34,16 @@ public class Route implements IElement {
 			} else if (direction > DIAG_MONTANTE) {
 				route.getLast().entreVoiture(voiture);
 			}
-			Logger.Information(this, "info", "Voiture entre dans la route " + nom);
+			Logger.Information(this, "info", voiture.nom + " entre dans la route " + nom);
 		} catch (ElementOccupeException e) {
-			throw new ElementOccupeException();
+			throw new ElementOccupeException(e.toString() + " dans la route");
 		}
 	}
 
 	@Override
 	public void ajouterConnexion(IElement element, int direction) {
+		if (element.getClass() == PointES.class)
+			this.ajouterTroncon(1);
 		if (direction > DIAG_MONTANTE) {
 			connexion.put(ENTRE, element);
 		} else if (direction < DIAG_MONTANTE) {
@@ -74,8 +78,8 @@ public class Route implements IElement {
 			}
 		} catch (ElementOccupeException e) {
 			voiture.setVitesse(0);
-			Logger.Warning(this, "info", e.toString());
-			e.printStackTrace();
+			voiture.setPosition(this);
+			Logger.Error(this, "info", e.toString());
 		}
 
 	}
