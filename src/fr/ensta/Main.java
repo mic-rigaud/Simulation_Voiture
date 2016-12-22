@@ -8,8 +8,8 @@ import enstabretagne.base.utility.Logger;
 import enstabretagne.base.utility.LoggerParamsNames;
 import enstabretagne.base.utility.loggerimpl.SXLSXExcelDataloggerImpl;
 import enstabretagne.base.utility.loggerimpl.SysOutLogger;
-import fr.ensta.environement.EnvironementEntity;
 import fr.ensta.lerouxlu.simu.SimEngine;
+import fr.ensta.simulation.EnvironementEntity;
 
 public class Main {
 	public static void main(String[] args) {

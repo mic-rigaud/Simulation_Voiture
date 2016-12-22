@@ -1,8 +1,8 @@
-package fr.ensta.environement.action;
+package fr.ensta.simulation.action;
 
 import enstabretagne.base.time.LogicalDateTime;
-import fr.ensta.environement.EnvironementEntity;
 import fr.ensta.lerouxlu.simu.impl.SimEvent;
+import fr.ensta.simulation.EnvironementEntity;
 
 public class AjouterVoiture extends SimEvent {
 

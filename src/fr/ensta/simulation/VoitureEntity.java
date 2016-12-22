@@ -1,11 +1,12 @@
-package fr.ensta.element.voiture;
+package fr.ensta.simulation;
 
 import enstabretagne.base.time.LogicalDuration;
 import fr.ensta.element.noeud.pointEntreSortie.PointES;
 import fr.ensta.element.route.troncon.Troncon;
-import fr.ensta.environement.action.DeplacerVoiture;
+import fr.ensta.element.voiture.Voiture;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.impl.SimEntity;
+import fr.ensta.simulation.action.DeplacerVoiture;
 
 public class VoitureEntity extends SimEntity {
 
