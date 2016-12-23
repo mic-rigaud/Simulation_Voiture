@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import enstabretagne.base.utility.Logger;
 import fr.ensta.element.ElementOccupeException;
 import fr.ensta.element.IElement;
-import fr.ensta.element.noeud.pointEntreSortie.PointES;
+import fr.ensta.element.noeud.intersection.ArretException;
 import fr.ensta.element.route.troncon.Troncon;
 import fr.ensta.element.voiture.Voiture;
 
@@ -20,7 +20,7 @@ public class Route implements IElement {
 		int nbrTroncon = longeur / Troncon.longeur;
 		route = new LinkedList<Troncon>();
 		connexion = new HashMap<Integer, IElement>();
-		ajouterTroncon(nbrTroncon - 2);
+		ajouterTroncon(nbrTroncon);
 		this.nom = nom;
 	}
 
@@ -42,8 +42,6 @@ public class Route implements IElement {
 
 	@Override
 	public void ajouterConnexion(IElement element, int direction) {
-		if (element.getClass() == PointES.class)
-			this.ajouterTroncon(1);
 		if (direction > DIAG_MONTANTE) {
 			connexion.put(ENTRE, element);
 		} else if (direction < DIAG_MONTANTE) {
@@ -58,14 +56,12 @@ public class Route implements IElement {
 			int index = 0;
 			for (Troncon tr : route) {
 				if (tr.contientVoiture(voiture)) {
-					// Logger.Information(this, "info", "Voiture est sur le
-					// troncon " + String.valueOf(index));
+					changerVitesse(index, voiture);
 					if (index == (route.size() - 1) && (voiture.getDirection() < DIAG_MONTANTE)) {
 						connexion.get(SORTIE).entreVoiture(voiture);
 					} else if (index == 0 && (voiture.getDirection() > DIAG_MONTANTE)) {
 						connexion.get(ENTRE).entreVoiture(voiture);
 					} else {
-						// TODO: gérer le cas ou le tronçon est occupe
 						if (voiture.getDirection() > DIAG_MONTANTE)
 							route.get(--index).entreVoiture(voiture);
 						else if (voiture.getDirection() < DIAG_MONTANTE)
@@ -77,11 +73,24 @@ public class Route implements IElement {
 				index++;
 			}
 		} catch (ElementOccupeException e) {
-			voiture.setVitesse(0);
-			voiture.setPosition(this);
+			voiture.arreter(this);
 			Logger.Error(this, "info", e.toString());
+		} catch (ArretException e) {
+			voiture.arreter(this);
+			Logger.Information(this, "info", "voiture " + voiture.nom + " arrete au stop");
 		}
 
+	}
+
+	private void changerVitesse(int index, Voiture voiture) {
+		// TODO Auto-generated method stub
+		double longeurArret = voiture.getLongeurArret();
+		int tronconNecessaireArret = (int) ((longeurArret / Troncon.longeur)) + 2;
+		if ((index > (route.size() - tronconNecessaireArret - 1) && (voiture.getDirection() < DIAG_MONTANTE))
+				|| (index < tronconNecessaireArret && (voiture.getDirection() > DIAG_MONTANTE)))
+			voiture.setVitesse(false, 10);
+		else
+			voiture.setVitesse(true, VITESSE_REGLEMENTAIRE);
 	}
 
 	public void ajouterTroncon(int nbrTroncon) {

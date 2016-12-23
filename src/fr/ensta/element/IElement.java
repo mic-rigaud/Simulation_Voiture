@@ -1,5 +1,6 @@
 package fr.ensta.element;
 
+import fr.ensta.element.noeud.intersection.ArretException;
 import fr.ensta.element.voiture.Voiture;
 
 public interface IElement {
@@ -14,7 +15,7 @@ public interface IElement {
 	public static final int SORTIE = 5;
 	public static final int VITESSE_REGLEMENTAIRE = 50;
 
-	void entreVoiture(Voiture voiture) throws ElementOccupeException;
+	void entreVoiture(Voiture voiture) throws ElementOccupeException, ArretException;
 
 	void deplacerVoiture(Voiture voiture);
 

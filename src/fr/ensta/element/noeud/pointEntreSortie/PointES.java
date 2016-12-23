@@ -4,6 +4,7 @@ import enstabretagne.base.utility.Logger;
 import fr.ensta.element.ElementOccupeException;
 import fr.ensta.element.IElement;
 import fr.ensta.element.noeud.INoeud;
+import fr.ensta.element.noeud.intersection.ArretException;
 import fr.ensta.element.voiture.Voiture;
 
 public class PointES implements INoeud {
@@ -24,8 +25,7 @@ public class PointES implements INoeud {
 
 	@Override
 	public void entreVoiture(Voiture voiture) {
-		voiture.setPosition(this);
-		voiture.setVitesse(0);
+		voiture.arreter(this);
 		Logger.Information(this, "info", voiture.nom + " est arrivee au point " + nom);
 	}
 
@@ -35,10 +35,8 @@ public class PointES implements INoeud {
 			Logger.Information(this, "info", voiture.nom + " viens de partir du point " + nom);
 			voiture.setDirection(direction);
 			entre.entreVoiture(voiture);
-			voiture.setVitesse(VITESSE_REGLEMENTAIRE);
-		} catch (ElementOccupeException e) {
-			voiture.setVitesse(0);
-			voiture.setPosition(this);
+		} catch (ElementOccupeException | ArretException e) {
+			voiture.arreter(this);
 			Logger.Error(this, "info", e.toString());
 		}
 	}

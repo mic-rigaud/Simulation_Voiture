@@ -2,7 +2,6 @@ package fr.ensta.simulation;
 
 import enstabretagne.base.time.LogicalDuration;
 import fr.ensta.element.noeud.pointEntreSortie.PointES;
-import fr.ensta.element.route.troncon.Troncon;
 import fr.ensta.element.voiture.Voiture;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.impl.SimEntity;
@@ -19,12 +18,8 @@ public class VoitureEntity extends SimEntity {
 
 	public void deplacerVoiture() {
 		voiture.deplacerVoiture();
-		int duree = 0;
 		if (!voiture.arrive()) {
-			if (voiture.getVitesse() == 0)
-				duree = 2000;
-			else
-				duree = (Troncon.longeur * 3600) / (voiture.getVitesse());
+			int duree = voiture.getDuree();
 			this.addEvent(new DeplacerVoiture(getEngine().SimulationDate().add(LogicalDuration.ofMillis(duree)), this));
 		}
 	}

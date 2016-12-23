@@ -21,7 +21,6 @@ public class Troncon implements IElement {
 		int direction = voiture.getDirection();
 		if (!voitures.containsKey(direction)) {
 			voitures.put(direction, voiture);
-			voiture.setVitesse(VITESSE_REGLEMENTAIRE);
 		} else {
 			throw new ElementOccupeException(voiture.nom, voitures.get(direction).nom);
 		}

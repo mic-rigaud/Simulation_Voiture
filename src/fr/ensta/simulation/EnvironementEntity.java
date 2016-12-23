@@ -7,7 +7,6 @@ import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
 import fr.ensta.element.IElement;
-import fr.ensta.element.noeud.intersection.Feu;
 import fr.ensta.element.noeud.intersection.Stop;
 import fr.ensta.element.noeud.pointEntreSortie.PointES;
 import fr.ensta.element.route.Route;
@@ -49,8 +48,8 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 		PointES E7 = new PointES("P7");
 		Stop st1 = new Stop("I1");
 		Stop st2 = new Stop("I2");
-		Feu st3 = (new FeuEntity(engine, "I3")).getFeu();
-		Stop st4 = new Stop("I4"); // TODO: changer en feu
+		Stop st3 = new Stop("I3");// (new FeuEntity(engine, "I3")).getFeu();
+		Stop st4 = new Stop("I4");
 		Route rt11 = new Route(3000, "R1.1");
 		Route rt12 = new Route(1300, "R1.2");
 		Route rt13 = new Route(2000, "R1.3");
@@ -83,6 +82,12 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 		st4.connecter(rt22, IElement.DROITE);
 		st4.connecter(rt32, IElement.HAUT);
 		st4.connecter(rt31, IElement.BAS);
+
+		st4.ajouterSignalisation(IElement.BAS);
+		st4.ajouterSignalisation(IElement.HAUT);
+		st1.ajouterSignalisation(IElement.HAUT);
+		st2.ajouterSignalisation(IElement.BAS);
+		st3.ajouterSignalisation(IElement.HAUT);
 
 		pointESs.add(E1);
 		pointESs.add(E2);
@@ -147,10 +152,10 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 	}
 
 	public void creerVoiture() {
-		int entre = 3; // rdm.nextInt(pointESs.size());
+		int entre = 1; // rdm.nextInt(pointESs.size());
 		int sortie = entre;
 		while (sortie == entre) {
-			sortie = 6;// rdm.nextInt(pointESs.size());
+			sortie = 2;// rdm.nextInt(pointESs.size());
 		}
 		Logger.Information(this, "info",
 				"Voiture cree entre :" + String.valueOf(entre + 1) + " sortie : " + String.valueOf(sortie + 1));
