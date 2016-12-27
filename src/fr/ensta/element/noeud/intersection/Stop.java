@@ -45,6 +45,7 @@ public class Stop implements IIntersection {
 	public void deplacerVoiture(Voiture voiture) {
 		try {
 			connections.get(voiture.getDirection()).entreVoiture(voiture);
+			trCentral.deplacerVoiture(voiture);
 		} catch (ElementOccupeException e) {
 			e.printStackTrace();
 		}

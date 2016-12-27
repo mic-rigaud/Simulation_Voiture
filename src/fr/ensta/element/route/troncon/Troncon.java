@@ -1,6 +1,7 @@
 package fr.ensta.element.route.troncon;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import fr.ensta.element.ElementOccupeException;
 import fr.ensta.element.IElement;
@@ -29,7 +30,13 @@ public class Troncon implements IElement {
 
 	@Override
 	public void deplacerVoiture(Voiture voiture) {
-		voitures.remove(voiture.getDirection());
+		int direction = 0;
+		for (Entry<Integer, Voiture> e : voitures.entrySet()) {
+			if (e.getValue() == voiture) {
+				direction = e.getKey();
+			}
+		}
+		voitures.remove(direction);
 		return;
 	}
 

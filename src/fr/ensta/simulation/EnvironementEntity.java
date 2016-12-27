@@ -107,16 +107,10 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 	public void activate() {
 		super.activate();
 		Logger.Information(this, "activate", "Environement est active... creation de voiture...");
-		this.addEvent(new AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(7)), this));
-		// this.addEvent(new
-		// AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)),
-		// this));
-		// this.addEvent(new
-		// AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)),
-		// this));
-		// this.addEvent(new
-		// AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)),
-		// this));
+		this.addEvent(new AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)), this));
+		this.addEvent(new AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)), this));
+		this.addEvent(new AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)), this));
+		this.addEvent(new AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)), this));
 
 	}
 
@@ -152,11 +146,18 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 	}
 
 	public void creerVoiture() {
-		int entre = 1; // rdm.nextInt(pointESs.size());
+		int entre = rdm.nextInt(pointESs.size());
 		int sortie = entre;
 		while (sortie == entre) {
-			sortie = 2;// rdm.nextInt(pointESs.size());
+			sortie = rdm.nextInt(pointESs.size());
 		}
+		// if (nbrVoiture < 2) {
+		// entre = 6;
+		// sortie = 3;
+		// } else {
+		// entre = 3;
+		// sortie = 6;
+		// }
 		Logger.Information(this, "info",
 				"Voiture cree entre :" + String.valueOf(entre + 1) + " sortie : " + String.valueOf(sortie + 1));
 		VoitureEntity voiture = new VoitureEntity(engine, "V" + String.valueOf(nbrVoiture++), pointESs.get(entre),
