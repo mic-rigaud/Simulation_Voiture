@@ -34,7 +34,7 @@ public class Feu implements IIntersection {
 		try {
 			voiture.setPosition(this);
 			decoupe.get(-voiture.getDirection()).entreVoiture(voiture);
-			voiture.setVitesse(VITESSE_REGLEMENTAIRE / 2);
+			// voiture.setVitesse(VITESSE_REGLEMENTAIRE / 2);
 			Logger.Information(this, "info", voiture.nom + " arrive sur le feu " + nom);
 		} catch (ElementOccupeException e) {
 			throw new ElementOccupeException(e.getMessage() + " dans le feu");
@@ -56,21 +56,18 @@ public class Feu implements IIntersection {
 						tr.deplacerVoiture(voiture);
 					} else if (position == 0) {
 						decoupe.get(direction).entreVoiture(voiture);
-						voiture.setVitesse(VITESSE_REGLEMENTAIRE);
+						// voiture.setVitesse(VITESSE_REGLEMENTAIRE);
 						tr.deplacerVoiture(voiture);
 					} else {
 						if (!bonCote(position) || couleur != VERT) {
-							voiture.setVitesse(0);
+							voiture.arreter(this);
 							return;
 						}
 						int newDirection = getNewDirection(this.nom, voiture.getArrive());
 						IntersectionLibre(position, newDirection);
 						tr.deplacerVoiture(voiture);
 						voiture.setDirection(newDirection);
-						if (voiture.getVitesse() == 0)
-							voiture.setVitesseDemarage();
-						else
-							voiture.setVitesse(VITESSE_REGLEMENTAIRE);
+						voiture.setVitesse(true, VITESSE_REGLEMENTAIRE);
 						decoupe.get(0).entreVoiture(voiture);
 					}
 				}
@@ -78,8 +75,7 @@ public class Feu implements IIntersection {
 		} catch (ElementOccupeException e) {
 			// TODO:Il va falloir gerer la deceleration pour s arreter puisqu un
 			// autre utilisateur est devant
-			voiture.setVitesse(0);
-			voiture.setPosition(this);
+			voiture.arreter(this);
 			Logger.Error(this, "info", e.toString());
 
 		}

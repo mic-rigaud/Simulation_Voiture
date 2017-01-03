@@ -49,7 +49,7 @@ public class Voiture {
 	}
 
 	public String getArrive() {
-		return arrive.getNom();
+		return arrive.toString();
 	}
 
 	public void setVitesse(boolean accelerer, double vitesseLimit) {
@@ -116,5 +116,9 @@ public class Voiture {
 
 	public double getLongeurArret() {
 		return Math.pow(khTOms(IElement.VITESSE_REGLEMENTAIRE), 2) / (2 * COEF_DECC);
+	}
+
+	public String getPosition() {
+		return this.position.toString();
 	}
 }

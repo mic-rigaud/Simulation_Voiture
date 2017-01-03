@@ -41,8 +41,8 @@ public class PointES implements INoeud {
 		}
 	}
 
-	public String getNom() {
+	@Override
+	public String toString() {
 		return nom;
 	}
-
 }

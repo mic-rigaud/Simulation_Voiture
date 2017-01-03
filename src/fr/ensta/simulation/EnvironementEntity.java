@@ -39,6 +39,7 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 	}
 
 	private void initialiserPlateau() {
+		// TODO: faire depuis un fichier conf
 		PointES E1 = new PointES("P1");
 		PointES E2 = new PointES("P2");
 		PointES E3 = new PointES("P3");

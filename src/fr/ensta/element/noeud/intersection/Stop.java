@@ -128,4 +128,8 @@ public class Stop implements IIntersection {
 		signalisation.put(direction, false);
 	}
 
+	@Override
+	public String toString() {
+		return nom;
+	}
 }

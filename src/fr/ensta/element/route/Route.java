@@ -100,4 +100,9 @@ public class Route implements IElement {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return nom;
+	}
+
 }

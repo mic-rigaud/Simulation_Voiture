@@ -22,4 +22,5 @@ public interface IElement {
 	@Deprecated
 	void ajouterConnexion(IElement element, int direction);
 	// void changerVitesse(Voiture voiture, int vitesse);
+
 }
