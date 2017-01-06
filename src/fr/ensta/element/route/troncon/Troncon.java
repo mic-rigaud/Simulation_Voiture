@@ -19,7 +19,7 @@ public class Troncon implements IElement {
 
 	@Override
 	public void entreVoiture(Voiture voiture) throws ElementOccupeException {
-		int direction = voiture.getDirection();
+		int direction = voiture.direction;
 		if (!voitures.containsKey(direction)) {
 			voitures.put(direction, voiture);
 		} else {

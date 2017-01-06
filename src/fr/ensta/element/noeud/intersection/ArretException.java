@@ -10,8 +10,8 @@ public class ArretException extends Exception {
 		super("Troncon occupe");
 	}
 
-	public ArretException(String voiture1, String voiture2) {
-		super("Troncon occupe par " + voiture2 + " et " + voiture1 + " essaye d y entrer");
+	public ArretException(String intersection, String voiture) {
+		super("Voiture " + voiture + " arreter au niveau de l'intersection " + intersection);
 
 	}
 

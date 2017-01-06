@@ -10,11 +10,12 @@ public class Voiture {
 	private static final double COEF_ACC = (100.0 * 1000.0) / (14.0 * 3600.0);
 	private static final double COEF_DECC = (100.0 * 1000.0) / (10.0 * 3600.0);
 	private PointES arrive;
-	private int direction;
 	private double vitesse;
 	private boolean arreter;
 	private IElement position;
+
 	public String nom;
+	public int direction;
 
 	public Voiture(String nom, PointES depart, PointES arrive) {
 		this.arrive = arrive;
@@ -22,14 +23,6 @@ public class Voiture {
 		this.nom = nom;
 		vitesse = IElement.VITESSE_REGLEMENTAIRE;
 		arreter = false;
-	}
-
-	public int getDirection() {
-		return direction;
-	}
-
-	public void setDirection(int direction) {
-		this.direction = direction;
 	}
 
 	public double getVitesse() {
@@ -44,7 +37,7 @@ public class Voiture {
 		this.position = position;
 	}
 
-	public boolean arrive() {
+	public boolean isArrive() {
 		return arrive.equals(position);
 	}
 

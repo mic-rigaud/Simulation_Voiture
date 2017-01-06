@@ -4,11 +4,11 @@ import enstabretagne.base.time.LogicalDateTime;
 import fr.ensta.lerouxlu.simu.impl.SimEvent;
 import fr.ensta.simulation.FeuEntity;
 
-public class ChangerCouleurFeu extends SimEvent {
+public class ChangerCouleur extends SimEvent {
 
 	private FeuEntity feu;
 
-	public ChangerCouleurFeu(LogicalDateTime scheduledDate, FeuEntity feu) {
+	public ChangerCouleur(LogicalDateTime scheduledDate, FeuEntity feu) {
 		super(scheduledDate);
 		this.feu = feu;
 	}

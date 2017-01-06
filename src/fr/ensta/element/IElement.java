@@ -23,4 +23,18 @@ public interface IElement {
 	void ajouterConnexion(IElement element, int direction);
 	// void changerVitesse(Voiture voiture, int vitesse);
 
+	public static String getDirection(int direction) {
+		switch (direction) {
+		case HAUT:
+			return "haut";
+		case BAS:
+			return "bas";
+		case GAUCHE:
+			return "gauche";
+		case DROITE:
+			return "droite";
+		default:
+			return "Direction invalide";
+		}
+	}
 }

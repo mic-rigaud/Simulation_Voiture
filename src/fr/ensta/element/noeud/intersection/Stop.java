@@ -26,12 +26,12 @@ public class Stop implements IIntersection {
 	@Override
 	public void entreVoiture(Voiture voiture) throws ElementOccupeException, ArretException {
 		try {
-			if (voiture.getVitesse() != 0 && stop(-voiture.getDirection())) {
-				throw new ArretException();
+			if (voiture.getVitesse() != 0 && stop(-voiture.direction)) {
+				throw new ArretException(nom, voiture.nom);
 			}
 			int newDirection = getNewDirection(this.nom, voiture.getArrive());
-			IntersectionLibre(voiture.getDirection(), newDirection);
-			voiture.setDirection(newDirection);
+			IntersectionLibre(voiture.direction, newDirection);
+			voiture.direction = newDirection;
 			voiture.setVitesse(true, VITESSE_REGLEMENTAIRE);
 			trCentral.entreVoiture(voiture);
 			voiture.setPosition(this);
@@ -44,10 +44,11 @@ public class Stop implements IIntersection {
 	@Override
 	public void deplacerVoiture(Voiture voiture) {
 		try {
-			connections.get(voiture.getDirection()).entreVoiture(voiture);
+			connections.get(voiture.direction).entreVoiture(voiture);
 			trCentral.deplacerVoiture(voiture);
 		} catch (ElementOccupeException e) {
-			e.printStackTrace();
+			voiture.arreter(this);
+			Logger.Error(this, "info", e.toString());
 		}
 	}
 
@@ -59,7 +60,7 @@ public class Stop implements IIntersection {
 	// public void entreVoiture(Voiture voiture) throws ElementOccupeException {
 	// try {
 	// voiture.setPosition(this);
-	// decoupe.get(-voiture.getDirection()).entreVoiture(voiture);
+	// decoupe.get(-voiture.direction).entreVoiture(voiture);
 	// voiture.setVitesse(25);
 	// Logger.Information(this, "info", voiture.nom + " arrive sur le stop " +
 	// nom);
@@ -71,7 +72,7 @@ public class Stop implements IIntersection {
 	// @Override
 	// public void deplacerVoiture(Voiture voiture) {
 	// try {
-	// int direction = voiture.getDirection();
+	// int direction = voiture.direction;
 	// for (Map.Entry<Integer, Troncon> e : decoupe.entrySet()) {
 	// int position = e.getKey();
 	// Troncon tr = e.getValue();

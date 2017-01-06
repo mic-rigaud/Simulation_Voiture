@@ -33,7 +33,7 @@ public class PointES implements INoeud {
 	public void deplacerVoiture(Voiture voiture) {
 		try {
 			Logger.Information(this, "info", voiture.nom + " viens de partir du point " + nom);
-			voiture.setDirection(direction);
+			voiture.direction = direction;
 			entre.entreVoiture(voiture);
 		} catch (ElementOccupeException | ArretException e) {
 			voiture.arreter(this);

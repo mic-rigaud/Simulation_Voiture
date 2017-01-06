@@ -1,29 +1,52 @@
 package fr.ensta.simulation;
 
 import enstabretagne.base.time.LogicalDuration;
-import fr.ensta.element.noeud.intersection.Feu;
+import enstabretagne.base.utility.IRecordable;
+import enstabretagne.base.utility.Logger;
+import fr.ensta.element.noeud.intersection.FeuIntersection;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.impl.SimEntity;
-import fr.ensta.simulation.action.ChangerCouleurFeu;
+import fr.ensta.simulation.action.ChangerCouleur;
 
-public class FeuEntity extends SimEntity {
+public class FeuEntity extends SimEntity implements IRecordable {
 
-	Feu feu;
+	private FeuIntersection feu;
 
 	public FeuEntity(SimEngine engine, String nom) {
-		super(engine, "Voiture");
-		feu = new Feu(nom);
-		this.addEvent(new ChangerCouleurFeu(getEngine().SimulationDate().add(LogicalDuration.ofMinutes(20)), this));
+		super(engine, "Feu");
+		this.feu = new FeuIntersection(nom);
+		this.start();
+	}
+
+	public void start() {
+		this.addEvent(new ChangerCouleur(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(35)), this));
 	}
 
 	public void changerCouleur() {
-		feu.changerCouleur();
-		int duree = feu.tempsAttente();
-		this.addEvent(new ChangerCouleurFeu(getEngine().SimulationDate().add(LogicalDuration.ofSeconds(duree)), this));
+		feu.changerCouleurFeu();
+		Logger.Data(this);
+		this.addEvent(new ChangerCouleur(
+				getEngine().SimulationDate().add(LogicalDuration.ofSeconds(feu.tempsAttente())), this));
 	}
 
-	public Feu getFeu() {
+	public FeuIntersection getFeu() {
 		return feu;
+	}
+
+	@Override
+	public String[] getTitles() {
+		String[] rep = { "Nom", "Token", "Couleur" };
+		return rep;
+	}
+
+	@Override
+	public String[] getRecords() {
+		return feu.etatIntersection();
+	}
+
+	@Override
+	public String getClassement() {
+		return "Feu";
 	}
 
 }

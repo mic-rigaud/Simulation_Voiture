@@ -27,7 +27,7 @@ public class Route implements IElement {
 	@Override
 	public void entreVoiture(Voiture voiture) throws ElementOccupeException {
 		try {
-			int direction = voiture.getDirection();
+			int direction = voiture.direction;
 			voiture.setPosition(this);
 			if (direction < DIAG_MONTANTE) {
 				route.getFirst().entreVoiture(voiture);
@@ -57,14 +57,14 @@ public class Route implements IElement {
 			for (Troncon tr : route) {
 				if (tr.contientVoiture(voiture)) {
 					changerVitesse(index, voiture);
-					if (index == (route.size() - 1) && (voiture.getDirection() < DIAG_MONTANTE)) {
+					if (index == (route.size() - 1) && (voiture.direction < DIAG_MONTANTE)) {
 						connexion.get(SORTIE).entreVoiture(voiture);
-					} else if (index == 0 && (voiture.getDirection() > DIAG_MONTANTE)) {
+					} else if (index == 0 && (voiture.direction > DIAG_MONTANTE)) {
 						connexion.get(ENTRE).entreVoiture(voiture);
 					} else {
-						if (voiture.getDirection() > DIAG_MONTANTE)
+						if (voiture.direction > DIAG_MONTANTE)
 							route.get(--index).entreVoiture(voiture);
-						else if (voiture.getDirection() < DIAG_MONTANTE)
+						else if (voiture.direction < DIAG_MONTANTE)
 							route.get(++index).entreVoiture(voiture);
 					}
 					tr.deplacerVoiture(voiture);
@@ -77,7 +77,7 @@ public class Route implements IElement {
 			Logger.Error(this, "info", e.toString());
 		} catch (ArretException e) {
 			voiture.arreter(this);
-			Logger.Information(this, "info", "voiture " + voiture.nom + " arrete au stop");
+			Logger.Information(this, "info", e.toString());
 		}
 
 	}
@@ -86,8 +86,8 @@ public class Route implements IElement {
 		// TODO Auto-generated method stub
 		double longeurArret = voiture.getLongeurArret();
 		int tronconNecessaireArret = (int) ((longeurArret / Troncon.longeur)) + 2;
-		if ((index > (route.size() - tronconNecessaireArret - 1) && (voiture.getDirection() < DIAG_MONTANTE))
-				|| (index < tronconNecessaireArret && (voiture.getDirection() > DIAG_MONTANTE)))
+		if ((index > (route.size() - tronconNecessaireArret - 1) && (voiture.direction < DIAG_MONTANTE))
+				|| (index < tronconNecessaireArret && (voiture.direction > DIAG_MONTANTE)))
 			voiture.setVitesse(false, 10);
 		else
 			voiture.setVitesse(true, VITESSE_REGLEMENTAIRE);

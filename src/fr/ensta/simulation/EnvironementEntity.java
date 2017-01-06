@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import enstabretagne.base.time.LogicalDuration;
-import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
 import fr.ensta.element.IElement;
+import fr.ensta.element.noeud.intersection.FeuIntersection;
 import fr.ensta.element.noeud.intersection.Stop;
 import fr.ensta.element.noeud.pointEntreSortie.PointES;
 import fr.ensta.element.route.Route;
@@ -15,7 +15,7 @@ import fr.ensta.lerouxlu.simu.impl.SimEntity;
 import fr.ensta.simulation.action.AjouterVoiture;
 import fr.ensta.simulation.action.DeplacerVoiture;
 
-public class EnvironementEntity extends SimEntity implements IRecordable {
+public class EnvironementEntity extends SimEntity {
 
 	private ArrayList<VoitureEntity> voitures;
 	private ArrayList<PointES> pointESs;
@@ -49,7 +49,7 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 		PointES E7 = new PointES("P7");
 		Stop st1 = new Stop("I1");
 		Stop st2 = new Stop("I2");
-		Stop st3 = new Stop("I3");// (new FeuEntity(engine, "I3")).getFeu();
+		FeuIntersection st3 = (new FeuEntity(engine, "I3")).getFeu();
 		Stop st4 = new Stop("I4");
 		Route rt11 = new Route(3000, "R1.1");
 		Route rt12 = new Route(1300, "R1.2");
@@ -88,7 +88,7 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 		st4.ajouterSignalisation(IElement.HAUT);
 		st1.ajouterSignalisation(IElement.HAUT);
 		st2.ajouterSignalisation(IElement.BAS);
-		st3.ajouterSignalisation(IElement.HAUT);
+		// st3.ajouterSignalisation(IElement.HAUT);
 
 		pointESs.add(E1);
 		pointESs.add(E2);
@@ -109,9 +109,15 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 		super.activate();
 		Logger.Information(this, "activate", "Environement est active... creation de voiture...");
 		this.addEvent(new AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)), this));
-		this.addEvent(new AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)), this));
-		this.addEvent(new AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)), this));
-		this.addEvent(new AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)), this));
+		// this.addEvent(new
+		// AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)),
+		// this));
+		// this.addEvent(new
+		// AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)),
+		// this));
+		// this.addEvent(new
+		// AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)),
+		// this));
 
 	}
 
@@ -128,37 +134,19 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 
 	}
 
-	@Override
-	public String[] getTitles() {
-
-		return null;
-	}
-
-	@Override
-	public String[] getRecords() {
-
-		return null;
-	}
-
-	@Override
-	public String getClassement() {
-
-		return null;
-	}
-
 	public void creerVoiture() {
 		int entre = rdm.nextInt(pointESs.size());
 		int sortie = entre;
-		while (sortie == entre) {
-			sortie = rdm.nextInt(pointESs.size());
-		}
-		// if (nbrVoiture < 2) {
-		// entre = 6;
-		// sortie = 3;
-		// } else {
-		// entre = 3;
-		// sortie = 6;
+		// while (sortie == entre) {
+		// sortie = rdm.nextInt(pointESs.size());
 		// }
+		if (nbrVoiture < 2) {
+			entre = 6;
+			sortie = 3;
+		} else {
+			entre = 3;
+			sortie = 6;
+		}
 		Logger.Information(this, "info",
 				"Voiture cree entre :" + String.valueOf(entre + 1) + " sortie : " + String.valueOf(sortie + 1));
 		VoitureEntity voiture = new VoitureEntity(engine, "V" + String.valueOf(nbrVoiture++), pointESs.get(entre),

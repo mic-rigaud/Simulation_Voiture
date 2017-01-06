@@ -3,6 +3,7 @@ package fr.ensta.simulation;
 import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
+import fr.ensta.element.IElement;
 import fr.ensta.element.noeud.pointEntreSortie.PointES;
 import fr.ensta.element.voiture.Voiture;
 import fr.ensta.lerouxlu.simu.SimEngine;
@@ -21,7 +22,7 @@ public class VoitureEntity extends SimEntity implements IRecordable {
 	public void deplacerVoiture() {
 		voiture.deplacerVoiture();
 		Logger.Data(this);
-		if (!voiture.arrive()) {
+		if (!voiture.isArrive()) {
 			int duree = voiture.getDuree();
 			this.addEvent(new DeplacerVoiture(getEngine().SimulationDate().add(LogicalDuration.ofMillis(duree)), this));
 		}
@@ -37,7 +38,7 @@ public class VoitureEntity extends SimEntity implements IRecordable {
 	public String[] getRecords() {
 		String heure = getEngine().SimulationDate().toString();
 		String[] rep = { voiture.nom, heure, voiture.getPosition(), String.valueOf(voiture.getVitesse()),
-				String.valueOf(voiture.getDirection()), voiture.getArrive() };
+				IElement.getDirection(voiture.direction), voiture.getArrive() };
 		return rep;
 	}
 
