@@ -31,8 +31,10 @@ public class Route implements IElement {
 			voiture.setPosition(this);
 			if (direction < DIAG_MONTANTE) {
 				route.getFirst().entreVoiture(voiture);
+				changerVitesse(0, voiture);
 			} else if (direction > DIAG_MONTANTE) {
 				route.getLast().entreVoiture(voiture);
+				changerVitesse(route.size(), voiture);
 			}
 			Logger.Information(this, "info", voiture.nom + " entre dans la route " + nom);
 		} catch (ElementOccupeException e) {
