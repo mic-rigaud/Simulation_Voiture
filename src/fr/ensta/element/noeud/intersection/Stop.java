@@ -56,58 +56,6 @@ public class Stop implements IIntersection {
 		return signalisation.get(direction);
 	}
 
-	// @Override
-	// public void entreVoiture(Voiture voiture) throws ElementOccupeException {
-	// try {
-	// voiture.setPosition(this);
-	// decoupe.get(-voiture.direction).entreVoiture(voiture);
-	// voiture.setVitesse(25);
-	// Logger.Information(this, "info", voiture.nom + " arrive sur le stop " +
-	// nom);
-	// } catch (ElementOccupeException e) {
-	// throw new ElementOccupeException(e.getMessage() + " dans le stop");
-	// }
-	// }
-	//
-	// @Override
-	// public void deplacerVoiture(Voiture voiture) {
-	// try {
-	// int direction = voiture.direction;
-	// for (Map.Entry<Integer, Troncon> e : decoupe.entrySet()) {
-	// int position = e.getKey();
-	// Troncon tr = e.getValue();
-	// if (tr.contientVoiture(voiture)) {
-	// if (position == direction) {
-	// connections.get(direction).entreVoiture(voiture);
-	// tr.deplacerVoiture(voiture);
-	// } else if (position == 0) {
-	// decoupe.get(direction).entreVoiture(voiture);
-	// voiture.setVitesse(VITESSE_REGLEMENTAIRE);
-	// tr.deplacerVoiture(voiture);
-	// } else {
-	// if (voiture.getVitesse() != 0) {
-	// voiture.setVitesse(0);
-	// return;
-	// }
-	// int newDirection = getNewDirection(this.nom, voiture.getArrive());
-	// IntersectionLibre(position, newDirection);
-	// tr.deplacerVoiture(voiture);
-	// voiture.setDirection(newDirection);
-	// voiture.setVitesseDemarage();
-	// decoupe.get(0).entreVoiture(voiture);
-	// }
-	// }
-	// }
-	// } catch (ElementOccupeException e) {
-	// // TODO:Il va falloir gerer la deceleration pour s arreter puisqu un
-	// // autre utilisateur est devant
-	// voiture.setVitesse(0);
-	// voiture.setPosition(this);
-	// Logger.Error(this, "info", e.toString());
-	//
-	// }
-	// }
-
 	// TODO: lever des exceptions!
 	// la gestion actuelle est simple. La voiture peut rentrer dans l
 	// intersection si il y personne. C'est trop simplifie...
