@@ -57,4 +57,8 @@ public class Troncon implements IElement {
 		// Les troncon n'ont pas de connexion donc pas besoin d implementer
 	}
 
+	public Voiture getVoiture(int direction) {
+		return voitures.get(direction);
+	}
+
 }

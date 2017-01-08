@@ -25,8 +25,6 @@ public class VoitureEntity extends SimEntity implements IRecordable {
 		if (!voiture.isArrive()) {
 			int duree = voiture.getDuree();
 			this.addEvent(new DeplacerVoiture(getEngine().SimulationDate().add(LogicalDuration.ofMillis(duree)), this));
-		} else {
-			voiture.notifyObservers(true);
 		}
 	}
 
