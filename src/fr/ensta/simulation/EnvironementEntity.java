@@ -1,6 +1,8 @@
 package fr.ensta.simulation;
 
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 
 import enstabretagne.base.time.LogicalDuration;
@@ -10,12 +12,13 @@ import fr.ensta.element.noeud.intersection.FeuIntersection;
 import fr.ensta.element.noeud.intersection.Stop;
 import fr.ensta.element.noeud.pointEntreSortie.PointES;
 import fr.ensta.element.route.Route;
+import fr.ensta.element.voiture.Voiture;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.impl.SimEntity;
 import fr.ensta.simulation.action.AjouterVoiture;
 import fr.ensta.simulation.action.DeplacerVoiture;
 
-public class EnvironementEntity extends SimEntity {
+public class EnvironementEntity extends SimEntity implements Observer {
 
 	private ArrayList<VoitureEntity> voitures;
 	private ArrayList<PointES> pointESs;
@@ -109,9 +112,8 @@ public class EnvironementEntity extends SimEntity {
 		super.activate();
 		Logger.Information(this, "activate", "Environement est active... creation de voiture...");
 		this.addEvent(new AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)), this));
-		// this.addEvent(new
-		// AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)),
-		// this));
+		this.addEvent(new AjouterVoiture(
+				getEngine().SimulationDate().add(LogicalDuration.ofHours(6).add(LogicalDuration.ofSeconds(1))), this));
 		// this.addEvent(new
 		// AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)),
 		// this));
@@ -152,7 +154,38 @@ public class EnvironementEntity extends SimEntity {
 		VoitureEntity voiture = new VoitureEntity(engine, "V" + String.valueOf(nbrVoiture++), pointESs.get(entre),
 				pointESs.get(sortie));
 		voitures.add(voiture);
+		voiture.voiture.addObserver(this);
 		voiture.addEvent(new DeplacerVoiture(getEngine().SimulationDate(), voiture));
 	}
 
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		Logger.Information(this, "info", "update");
+		if (arg1 != null) {
+			enleverVoiture(arg0);
+		} else {
+			prevenirRalentissement((Voiture) arg0);
+		}
+	}
+
+	private void enleverVoiture(Observable arg0) {
+		for (VoitureEntity voiture : voitures) {
+			if (arg0.equals(voiture.voiture)) {
+				voitures.remove(voiture);
+				return;
+			}
+		}
+
+	}
+
+	private void prevenirRalentissement(Voiture voitureRalenti) {
+		for (VoitureEntity voitureE : voitures) {
+			Voiture voiture = voitureE.voiture;
+			if (!voiture.equals(voitureRalenti)) {
+				voiture.verifierBouchon(voitureRalenti);
+				Logger.Information(this, "info", "Prevenir");
+			}
+
+		}
+	}
 }

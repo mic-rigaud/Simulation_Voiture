@@ -1,10 +1,15 @@
 package fr.ensta.element.voiture;
 
+import java.util.LinkedList;
+import java.util.Observable;
+
+import enstabretagne.base.utility.Logger;
 import fr.ensta.element.IElement;
 import fr.ensta.element.noeud.pointEntreSortie.PointES;
+import fr.ensta.element.route.Route;
 import fr.ensta.element.route.troncon.Troncon;
 
-public class Voiture {
+public class Voiture extends Observable {
 
 	// a besoin de 49m pour s arreter
 	private static final double COEF_ACC = (100.0 * 1000.0) / (14.0 * 3600.0);
@@ -16,6 +21,7 @@ public class Voiture {
 
 	public String nom;
 	public int direction;
+	private LinkedList<Voiture> voitureBouchon;
 
 	public Voiture(String nom, PointES depart, PointES arrive) {
 		this.arrive = arrive;
@@ -23,6 +29,7 @@ public class Voiture {
 		this.nom = nom;
 		vitesse = IElement.VITESSE_REGLEMENTAIRE;
 		arreter = false;
+		voitureBouchon = new LinkedList<Voiture>();
 	}
 
 	public double getVitesse() {
@@ -46,7 +53,8 @@ public class Voiture {
 	}
 
 	public void setVitesse(boolean accelerer, double vitesseLimit) {
-		if (accelerer && this.vitesse < vitesseLimit) {
+		verifierBouchon();
+		if (accelerer && this.vitesse < vitesseLimit && voitureBouchon.isEmpty()) {
 			this.accelerer(vitesseLimit);
 		} else if (!accelerer && this.vitesse > vitesseLimit) {
 			this.deccelerer(vitesseLimit);
@@ -80,6 +88,9 @@ public class Voiture {
 		} else {
 			this.vitesse = newVitesse;
 		}
+		this.setChanged();
+		this.notifyObservers();
+		Logger.Information(this, "info", "notify!!!" + String.valueOf(countObservers()));
 	}
 
 	private double khTOms(double vitesse2) {
@@ -111,7 +122,33 @@ public class Voiture {
 		return Math.pow(khTOms(IElement.VITESSE_REGLEMENTAIRE), 2) / (2 * COEF_DECC);
 	}
 
-	public String getPosition() {
-		return this.position.toString();
+	public IElement getPosition() {
+		return this.position;
 	}
+
+	public void verifierBouchon(Voiture voitureRalenti) {
+		if (position.equals(voitureRalenti.getPosition()) && direction == voitureRalenti.direction
+				&& !voitureBouchon.contains(voitureRalenti)) {
+			Route rt = (Route) position;
+			if (rt.isProche(this, voitureRalenti)) {
+				voitureBouchon.add(voitureRalenti);
+				Logger.Information(this, "info",
+						"La voiture a ete ajouter au bouchon size: " + String.valueOf(voitureBouchon.size()));
+			}
+		}
+	}
+
+	private void verifierBouchon() {
+		int id = 0;
+		Route rt = (Route) position;
+		while (id < voitureBouchon.size()) {
+			Voiture voiture = voitureBouchon.get(id);
+			if (!rt.isProche(this, voiture)) {
+				voitureBouchon.remove(voiture);
+				id--;
+			}
+			id++;
+		}
+	}
+
 }

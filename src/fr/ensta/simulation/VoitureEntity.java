@@ -25,6 +25,8 @@ public class VoitureEntity extends SimEntity implements IRecordable {
 		if (!voiture.isArrive()) {
 			int duree = voiture.getDuree();
 			this.addEvent(new DeplacerVoiture(getEngine().SimulationDate().add(LogicalDuration.ofMillis(duree)), this));
+		} else {
+			voiture.notifyObservers(true);
 		}
 	}
 
@@ -37,7 +39,7 @@ public class VoitureEntity extends SimEntity implements IRecordable {
 	@Override
 	public String[] getRecords() {
 		String heure = getEngine().SimulationDate().toString();
-		String[] rep = { voiture.nom, heure, voiture.getPosition(), String.valueOf(voiture.getVitesse()),
+		String[] rep = { voiture.nom, heure, voiture.getPosition().toString(), String.valueOf(voiture.getVitesse()),
 				IElement.getDirection(voiture.direction), voiture.getArrive() };
 		return rep;
 	}

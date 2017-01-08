@@ -91,7 +91,9 @@ public class Route implements IElement {
 		if ((index > (route.size() - tronconNecessaireArret - 1) && (voiture.direction < DIAG_MONTANTE))
 				|| (index < tronconNecessaireArret && (voiture.direction > DIAG_MONTANTE)))
 			voiture.setVitesse(false, 10);
-		else
+		else if (index == route.size() / 2) {
+			voiture.setVitesse(false, 20);
+		} else
 			voiture.setVitesse(true, VITESSE_REGLEMENTAIRE);
 	}
 
@@ -105,6 +107,23 @@ public class Route implements IElement {
 	@Override
 	public String toString() {
 		return nom;
+	}
+
+	public boolean isProche(Voiture voiture1, Voiture voiture2) {
+		int index0 = 0;
+		int index1 = 0;
+		int index2 = 0;
+		for (Troncon tr : route) {
+			if (tr.contientVoiture(voiture1))
+				index1 = index0;
+			if (tr.contientVoiture(voiture2))
+				index2 = index0;
+			index0++;
+		}
+		if (Math.abs(index1 - index2) < 3)
+			return true;
+		else
+			return false;
 	}
 
 }

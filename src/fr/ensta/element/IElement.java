@@ -37,4 +37,5 @@ public interface IElement {
 			return "Direction invalide";
 		}
 	}
+
 }

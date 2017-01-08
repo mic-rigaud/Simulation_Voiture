@@ -2,7 +2,6 @@ package fr.ensta.simulation;
 
 import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.base.utility.IRecordable;
-import enstabretagne.base.utility.Logger;
 import fr.ensta.element.noeud.intersection.FeuIntersection;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.impl.SimEntity;
@@ -24,7 +23,7 @@ public class FeuEntity extends SimEntity implements IRecordable {
 
 	public void changerCouleur() {
 		feu.changerCouleurFeu();
-		Logger.Data(this);
+		// Logger.Data(this);
 		this.addEvent(new ChangerCouleur(
 				getEngine().SimulationDate().add(LogicalDuration.ofSeconds(feu.tempsAttente())), this));
 	}
