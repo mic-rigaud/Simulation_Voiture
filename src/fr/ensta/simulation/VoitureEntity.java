@@ -30,7 +30,7 @@ public class VoitureEntity extends SimEntity implements IRecordable {
 
 	@Override
 	public String[] getTitles() {
-		String[] rep = { "Nom", "Heure", "Situation", "Vitesse", "Direction de deplacement", "Arrive" };
+		String[] rep = { "Nom", "Heure", "Situation", "Vitesse", "Direction de deplacement", "Arrive", "Feux Stop" };
 		return rep;
 	}
 
@@ -38,7 +38,7 @@ public class VoitureEntity extends SimEntity implements IRecordable {
 	public String[] getRecords() {
 		String heure = getEngine().SimulationDate().toString();
 		String[] rep = { voiture.nom, heure, voiture.getPosition().toString(), String.valueOf(voiture.getVitesse()),
-				IElement.getDirection(voiture.direction), voiture.getArrive() };
+				IElement.getDirection(voiture.direction), voiture.getArrive(), String.valueOf(voiture.getFeuxStop()) };
 		return rep;
 	}
 

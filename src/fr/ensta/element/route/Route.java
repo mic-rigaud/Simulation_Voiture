@@ -93,10 +93,11 @@ public class Route implements IElement {
 			voiture.setVitesse(false, 10);
 			// Permet de creer des ralentissement pour tester la decceleration
 			// en bouchons
-			// }else if (index == route.size() / 2) {
+			// } else if (index == route.size() / 2 && voiture.nom.equals("V0"))
+			// {
 			// voiture.setVitesse(false, 20);
-			//
-		} else if (presenceVoitureDevant(index, voiture)) {
+
+		} else if (hasVoitureDevantRalenti(index, voiture)) {
 			voiture.setVitesse(false, 20);
 		} else
 			voiture.setVitesse(true, VITESSE_REGLEMENTAIRE);
@@ -115,24 +116,7 @@ public class Route implements IElement {
 		return nom;
 	}
 
-	// public boolean isProche(Voiture voiture1, Voiture voiture2) {
-	// int index0 = 0;
-	// int index1 = 0;
-	// int index2 = 0;
-	// for (Troncon tr : route) {
-	// if (tr.contientVoiture(voiture1))
-	// index1 = index0;
-	// if (tr.contientVoiture(voiture2))
-	// index2 = index0;
-	// index0++;
-	// }
-	// if (Math.abs(index1 - index2) < 3)
-	// return true;
-	// else
-	// return false;
-	// }
-
-	private boolean presenceVoitureDevant(int index, Voiture voiture) {
+	private boolean hasVoitureDevantRalenti(int index, Voiture voiture) {
 		int id = 0;
 		if (voiture.direction > DIAG_MONTANTE)
 			id = -1;
@@ -141,8 +125,7 @@ public class Route implements IElement {
 		for (int i = 0; i < DISTANCE_DE_SECURITE; i++) {
 			index = index + id;
 			if (route.get(index).contientVoiture(voiture.direction)) {
-				if (route.get(index).getVoiture(voiture.direction).getVitesse() != VITESSE_REGLEMENTAIRE)
-					return true;
+				return route.get(index).getVoiture(voiture.direction).getFeuxStop();
 			}
 		}
 		return false;

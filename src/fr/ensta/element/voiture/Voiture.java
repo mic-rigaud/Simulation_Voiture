@@ -13,6 +13,7 @@ public class Voiture {
 	private double vitesse;
 	private boolean arreter;
 	private IElement position;
+	private boolean feuxStop;
 
 	public String nom;
 	public int direction;
@@ -23,6 +24,7 @@ public class Voiture {
 		this.nom = nom;
 		vitesse = IElement.VITESSE_REGLEMENTAIRE;
 		arreter = false;
+		feuxStop = false;
 	}
 
 	public double getVitesse() {
@@ -65,7 +67,7 @@ public class Voiture {
 		} else {
 			this.vitesse = newVitesse;
 		}
-
+		feuxStop = false;
 	}
 
 	private void deccelerer(double vitesseLimit) {
@@ -80,6 +82,7 @@ public class Voiture {
 		} else {
 			this.vitesse = newVitesse;
 		}
+		feuxStop = true;
 	}
 
 	private double khTOms(double vitesse2) {
@@ -105,6 +108,7 @@ public class Voiture {
 		this.position = position;
 		this.vitesse = 0;
 		arreter = true;
+		feuxStop = true;
 	}
 
 	public double getLongeurArret() {
@@ -115,4 +119,7 @@ public class Voiture {
 		return this.position;
 	}
 
+	public boolean getFeuxStop() {
+		return feuxStop;
+	}
 }
