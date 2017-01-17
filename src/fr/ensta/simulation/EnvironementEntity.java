@@ -108,16 +108,31 @@ public class EnvironementEntity extends SimEntity {
 	public void activate() {
 		super.activate();
 		Logger.Information(this, "activate", "Environement est active... creation de voiture...");
-		this.addEvent(new AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)), this));
-		this.addEvent(new AjouterVoiture(
-				getEngine().SimulationDate().add(LogicalDuration.ofHours(6).add(LogicalDuration.ofSeconds(1))), this));
-		// this.addEvent(new
-		// AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)),
-		// this));
-		// this.addEvent(new
-		// AjouterVoiture(getEngine().SimulationDate().add(LogicalDuration.ofHours(6)),
-		// this));
 
+		int tab[][] = { { 7, 40, 50, 30, 20, 30, 20, 30 }, //
+				{ 2, 300, 200, 100, 100, 400, 50, 30 }, //
+				{ 8, 20, 30, 20, 30, 20, 30, 10 }, //
+				{ 2, 100, 150, 300, 200, 150, 100, 100 }, //
+				{ 5, 20, 30, 15, 50, 20, 10, 10 } };
+
+		// int tab[][] = { { 7, 4, 5, 0, 0, 0, 0, 0 } }; //
+		// { 2, 300, 200, 100, 100, 400, 50, 30 }, //
+		// { 8, 20, 30, 20, 30, 20, 30, 10 }, //
+		// { 2, 100, 150, 300, 200, 150, 100, 100 }, //
+		// { 5, 20, 30, 15, 50, 20, 10, 10 } };
+
+		int time = 0;
+		for (int ind1 = 0; ind1 < tab.length; ind1++) {
+			for (int ind2 = 1; ind2 < tab[0].length; ind2++) {
+				for (int ind3 = 1; ind3 <= tab[ind1][ind2]; ind3++) {
+					this.addEvent(new AjouterVoiture(
+							getEngine().SimulationDate().add(LogicalDuration.ofHours(time))
+									.add(LogicalDuration.ofSeconds((3600 * ind3 * tab[ind1][0]) / tab[ind1][ind2])),
+							this, ind2));
+				}
+			}
+			time = time + tab[ind1][0];
+		}
 	}
 
 	@Override
@@ -133,25 +148,31 @@ public class EnvironementEntity extends SimEntity {
 
 	}
 
-	public void creerVoiture() {
-		int entre = rdm.nextInt(pointESs.size());
-		int sortie = entre;
-		// while (sortie == entre) {
-		// sortie = rdm.nextInt(pointESs.size());
-		// }
-		if (nbrVoiture < 2) {
-			entre = 6;
-			sortie = 3;
-		} else {
-			entre = 3;
-			sortie = 6;
+	public void creerVoiture(int entree) {
+		int tab[][] = { { 5, 15, 25, 30, 65, 100 }, //
+				{ 10, 15, 35, 55, 80, 100 }, //
+				{ 15, 30, 50, 70, 90, 100 }, //
+				{ 15, 25, 35, 55, 95, 100 }, //
+				{ 10, 40, 50, 60, 70, 100 }, //
+				{ 20, 30, 70, 80, 90, 100 }, //
+				{ 20, 40, 60, 80, 90, 100 } };
+
+		int sortie = 0;
+		int a = rdm.nextInt(100);
+		System.out.println(a);
+		for (int ind = 0; ind < tab[0].length; ind++) {
+			if (a > tab[entree][ind]) {
+				sortie = ind + 1;
+			} else
+				break;
 		}
+		if (sortie >= entree)
+			sortie++;
 		Logger.Information(this, "info",
-				"Voiture cree entre :" + String.valueOf(entre + 1) + " sortie : " + String.valueOf(sortie + 1));
-		VoitureEntity voiture = new VoitureEntity(engine, "V" + String.valueOf(nbrVoiture++), pointESs.get(entre),
+				"Voiture cree entre :" + String.valueOf(entree + 1) + " sortie : " + String.valueOf(sortie + 1));
+		VoitureEntity voiture = new VoitureEntity(engine, "V" + String.valueOf(nbrVoiture++), pointESs.get(entree),
 				pointESs.get(sortie));
 		voitures.add(voiture);
-
 		voiture.addEvent(new DeplacerVoiture(getEngine().SimulationDate(), voiture));
 	}
 

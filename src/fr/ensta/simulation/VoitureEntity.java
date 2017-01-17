@@ -17,11 +17,13 @@ public class VoitureEntity extends SimEntity implements IRecordable {
 	public VoitureEntity(SimEngine engine, String nom, PointES depart, PointES arrive) {
 		super(engine, "Voiture");
 		voiture = new Voiture(nom, depart, arrive);
+		Logger.Data(this);
 	}
 
 	public void deplacerVoiture() {
 		voiture.deplacerVoiture();
-		Logger.Data(this);
+		if (voiture.getVitesse() != IElement.VITESSE_REGLEMENTAIRE)
+			Logger.Data(this);
 		if (!voiture.isArrive()) {
 			int duree = voiture.getDuree();
 			this.addEvent(new DeplacerVoiture(getEngine().SimulationDate().add(LogicalDuration.ofMillis(duree)), this));

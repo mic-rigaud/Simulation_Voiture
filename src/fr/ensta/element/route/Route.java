@@ -59,12 +59,12 @@ public class Route implements IElement {
 			int index = 0;
 			for (Troncon tr : route) {
 				if (tr.contientVoiture(voiture)) {
-					changerVitesse(index, voiture);
 					if (index == (route.size() - 1) && (voiture.direction < DIAG_MONTANTE)) {
 						connexion.get(SORTIE).entreVoiture(voiture);
 					} else if (index == 0 && (voiture.direction > DIAG_MONTANTE)) {
 						connexion.get(ENTRE).entreVoiture(voiture);
 					} else {
+						changerVitesse(index, voiture);
 						if (voiture.direction > DIAG_MONTANTE)
 							route.get(--index).entreVoiture(voiture);
 						else if (voiture.direction < DIAG_MONTANTE)
