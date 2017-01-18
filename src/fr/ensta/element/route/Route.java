@@ -9,6 +9,7 @@ import fr.ensta.element.IElement;
 import fr.ensta.element.noeud.intersection.ArretException;
 import fr.ensta.element.route.troncon.Troncon;
 import fr.ensta.element.voiture.Voiture;
+import fr.ensta.simulation.EnvironementEntity;
 
 public class Route implements IElement {
 
@@ -16,6 +17,8 @@ public class Route implements IElement {
 	private LinkedList<Troncon> route;
 	private HashMap<Integer, IElement> connexion;
 	private String nom;
+	public int nbVoitureSens1;
+	public int nbVoitureSens2;
 
 	public Route(int longeur, String nom) {
 		int nbrTroncon = longeur / Troncon.longeur;
@@ -23,6 +26,8 @@ public class Route implements IElement {
 		connexion = new HashMap<Integer, IElement>();
 		ajouterTroncon(nbrTroncon);
 		this.nom = nom;
+		nbVoitureSens1 = 0;
+		nbVoitureSens2 = 0;
 	}
 
 	@Override
@@ -33,9 +38,11 @@ public class Route implements IElement {
 			if (direction < DIAG_MONTANTE) {
 				route.getFirst().entreVoiture(voiture);
 				changerVitesse(0, voiture);
+				nbVoitureSens2++;
 			} else if (direction > DIAG_MONTANTE) {
 				route.getLast().entreVoiture(voiture);
 				changerVitesse(route.size(), voiture);
+				nbVoitureSens1++;
 			}
 			Logger.Information(this, "info", voiture.nom + " entre dans la route " + nom);
 		} catch (ElementOccupeException e) {
@@ -61,8 +68,12 @@ public class Route implements IElement {
 				if (tr.contientVoiture(voiture)) {
 					if (index == (route.size() - 1) && (voiture.direction < DIAG_MONTANTE)) {
 						connexion.get(SORTIE).entreVoiture(voiture);
+						nbVoitureSens2--;
+						EnvironementEntity.INSTANCE.flash();
 					} else if (index == 0 && (voiture.direction > DIAG_MONTANTE)) {
 						connexion.get(ENTRE).entreVoiture(voiture);
+						nbVoitureSens1--;
+						EnvironementEntity.INSTANCE.flash();
 					} else {
 						changerVitesse(index, voiture);
 						if (voiture.direction > DIAG_MONTANTE)
@@ -129,6 +140,12 @@ public class Route implements IElement {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public int[] getNbVoiture() {
+		int[] rep = { nbVoitureSens1, nbVoitureSens2 };
+		return rep;
 	}
 
 }

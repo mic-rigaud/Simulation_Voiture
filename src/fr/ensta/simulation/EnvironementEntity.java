@@ -1,9 +1,11 @@
 package fr.ensta.simulation;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import enstabretagne.base.time.LogicalDuration;
+import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
 import fr.ensta.element.IElement;
 import fr.ensta.element.noeud.intersection.FeuIntersection;
@@ -15,20 +17,25 @@ import fr.ensta.lerouxlu.simu.impl.SimEntity;
 import fr.ensta.simulation.action.AjouterVoiture;
 import fr.ensta.simulation.action.DeplacerVoiture;
 
-public class EnvironementEntity extends SimEntity {
+public class EnvironementEntity extends SimEntity implements IRecordable {
 
 	private ArrayList<VoitureEntity> voitures;
 	private ArrayList<PointES> pointESs;
+	private ArrayList<IElement> elements;
 	private SimEngine engine;
 	private Random rdm;
 	private static int nbrVoiture = 0;
+
+	public static EnvironementEntity INSTANCE;
 
 	public EnvironementEntity(SimEngine engine) {
 		super(engine, "Environement");
 		this.engine = engine;
 		pointESs = new ArrayList<PointES>();
 		voitures = new ArrayList<VoitureEntity>();
+		elements = new ArrayList<IElement>();
 		rdm = new Random();
+		INSTANCE = this;
 	}
 
 	@Override
@@ -97,6 +104,21 @@ public class EnvironementEntity extends SimEntity {
 		pointESs.add(E5);
 		pointESs.add(E6);
 		pointESs.add(E7);
+		elements.add(rt11);
+		elements.add(rt12);
+		elements.add(rt13);
+		elements.add(rt21);
+		elements.add(rt22);
+		elements.add(rt23);
+		elements.add(rt31);
+		elements.add(rt32);
+		elements.add(rt4);
+		elements.add(rt2);
+		elements.add(st1);
+		elements.add(st2);
+		elements.add(st3);
+		elements.add(st4);
+
 	}
 
 	@Override
@@ -115,11 +137,7 @@ public class EnvironementEntity extends SimEntity {
 				{ 2, 100, 150, 300, 200, 150, 100, 100 }, //
 				{ 5, 20, 30, 15, 50, 20, 10, 10 } };
 
-		// int tab[][] = { { 7, 4, 5, 0, 0, 0, 0, 0 } }; //
-		// { 2, 300, 200, 100, 100, 400, 50, 30 }, //
-		// { 8, 20, 30, 20, 30, 20, 30, 10 }, //
-		// { 2, 100, 150, 300, 200, 150, 100, 100 }, //
-		// { 5, 20, 30, 15, 50, 20, 10, 10 } };
+		// int tab[][] = { { 7, 1, 0, 0, 0, 0, 0, 0 } }; //
 
 		int time = 0;
 		for (int ind1 = 0; ind1 < tab.length; ind1++) {
@@ -159,7 +177,6 @@ public class EnvironementEntity extends SimEntity {
 
 		int sortie = 0;
 		int a = rdm.nextInt(100);
-		System.out.println(a);
 		for (int ind = 0; ind < tab[0].length; ind++) {
 			if (a > tab[entree][ind]) {
 				sortie = ind + 1;
@@ -174,6 +191,46 @@ public class EnvironementEntity extends SimEntity {
 				pointESs.get(sortie));
 		voitures.add(voiture);
 		voiture.addEvent(new DeplacerVoiture(getEngine().SimulationDate(), voiture));
+	}
+
+	public void flash() {
+		Logger.Data(this);
+	}
+
+	@Override
+	public String[] getTitles() {
+		List<String> liste = new ArrayList<String>();
+		for (int i = 0; i < elements.size(); i++) {
+			if (elements.get(i).toString().startsWith("R")) {
+				liste.add(elements.get(i).toString().concat(" Sens Postif"));
+				liste.add(elements.get(i).toString().concat(" Sens Negatif"));
+			} else {
+				liste.add(elements.get(i).toString());
+			}
+
+		}
+		String[] rep = new String[liste.size()];
+		rep = liste.toArray(rep);
+		return rep;
+	}
+
+	@Override
+	public String[] getRecords() {
+		List<String> liste = new ArrayList<String>();
+		for (int i = 0; i < elements.size(); i++) {
+			int[] rep = elements.get(i).getNbVoiture();
+			for (int ind : rep) {
+				liste.add(String.valueOf(ind));
+			}
+		}
+		String[] rep = new String[liste.size()];
+		rep = liste.toArray(rep);
+		return rep;
+	}
+
+	@Override
+	public String getClassement() {
+		return "Graphe";
 	}
 
 }

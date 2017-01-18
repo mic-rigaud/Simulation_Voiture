@@ -6,6 +6,7 @@ import fr.ensta.element.IElement;
 import fr.ensta.element.noeud.INoeud;
 import fr.ensta.element.noeud.intersection.ArretException;
 import fr.ensta.element.voiture.Voiture;
+import fr.ensta.simulation.EnvironementEntity;
 
 public class PointES implements INoeud {
 
@@ -35,6 +36,7 @@ public class PointES implements INoeud {
 			Logger.Information(this, "info", voiture.nom + " viens de partir du point " + nom);
 			voiture.direction = direction;
 			entre.entreVoiture(voiture);
+			EnvironementEntity.INSTANCE.flash();
 		} catch (ElementOccupeException | ArretException e) {
 			voiture.arreter(this);
 			Logger.Error(this, "info", e.toString());
@@ -44,5 +46,11 @@ public class PointES implements INoeud {
 	@Override
 	public String toString() {
 		return nom;
+	}
+
+	@Override
+	public int[] getNbVoiture() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -7,7 +7,6 @@ import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.base.utility.Logger;
 import enstabretagne.base.utility.LoggerParamsNames;
 import enstabretagne.base.utility.loggerimpl.SXLSXExcelDataloggerImpl;
-import enstabretagne.base.utility.loggerimpl.SysOutLogger;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.simulation.EnvironementEntity;
 
@@ -15,7 +14,8 @@ public class Main {
 	public static void main(String[] args) {
 		// Premier d'entre eux: le logger qui �crit dans la sortie standard
 		HashMap<String, HashMap<String, Object>> loggersNames = new HashMap<String, HashMap<String, Object>>();
-		loggersNames.put(SysOutLogger.class.getCanonicalName(), new HashMap<String, Object>());
+		// loggersNames.put(SysOutLogger.class.getCanonicalName(), new
+		// HashMap<String, Object>());
 
 		// Premier d'entre eux: le logger qui �crit dans un fichier excel
 		HashMap<String, Object> params = new HashMap<String, Object>();

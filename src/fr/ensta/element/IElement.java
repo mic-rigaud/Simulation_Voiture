@@ -38,4 +38,6 @@ public interface IElement {
 		}
 	}
 
+	int[] getNbVoiture();
+
 }

@@ -8,6 +8,7 @@ import fr.ensta.element.IElement;
 import fr.ensta.element.route.Route;
 import fr.ensta.element.route.troncon.Troncon;
 import fr.ensta.element.voiture.Voiture;
+import fr.ensta.simulation.EnvironementEntity;
 
 public class Stop implements IIntersection {
 
@@ -15,12 +16,14 @@ public class Stop implements IIntersection {
 	private HashMap<Integer, Boolean> signalisation;
 	private Troncon trCentral;
 	private String nom;
+	private int nbVoiture;
 
 	public Stop(String nom) {
 		connections = new HashMap<Integer, Route>();
 		signalisation = new HashMap<Integer, Boolean>();
 		trCentral = new Troncon();
 		this.nom = nom;
+		nbVoiture = 0;
 	}
 
 	@Override
@@ -35,6 +38,7 @@ public class Stop implements IIntersection {
 			voiture.setVitesse(true, VITESSE_REGLEMENTAIRE);
 			trCentral.entreVoiture(voiture);
 			voiture.setPosition(this);
+			nbVoiture++;
 			Logger.Information(this, "info", voiture.nom + " arrive sur le stop " + nom);
 		} catch (ElementOccupeException e) {
 			throw new ElementOccupeException(e.getMessage() + " dans le stop " + nom);
@@ -46,6 +50,8 @@ public class Stop implements IIntersection {
 		try {
 			connections.get(voiture.direction).entreVoiture(voiture);
 			trCentral.deplacerVoiture(voiture);
+			nbVoiture--;
+			EnvironementEntity.INSTANCE.flash();
 		} catch (ElementOccupeException e) {
 			voiture.arreter(this);
 			Logger.Error(this, "info", e.toString());
@@ -66,7 +72,6 @@ public class Stop implements IIntersection {
 
 	public void ajouterSignalisation(int direction) {
 		signalisation.put(direction, true);
-		System.out.println(nom + " " + signalisation);
 	}
 
 	@Override
@@ -80,5 +85,11 @@ public class Stop implements IIntersection {
 	@Override
 	public String toString() {
 		return nom;
+	}
+
+	@Override
+	public int[] getNbVoiture() {
+		int[] rep = { nbVoiture };
+		return rep;
 	}
 }

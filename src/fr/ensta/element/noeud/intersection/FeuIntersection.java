@@ -12,6 +12,7 @@ import fr.ensta.element.IElement;
 import fr.ensta.element.route.Route;
 import fr.ensta.element.route.troncon.Troncon;
 import fr.ensta.element.voiture.Voiture;
+import fr.ensta.simulation.EnvironementEntity;
 
 public class FeuIntersection implements IIntersection {
 	private HashMap<Integer, Route> connections;
@@ -19,12 +20,14 @@ public class FeuIntersection implements IIntersection {
 	private String nom;
 	private int token;
 	private TreeMap<Integer, Feu> mapFeu;
+	private int nbVoiture;
 
 	public FeuIntersection(String nom) {
 		connections = new HashMap<Integer, Route>();
 		mapFeu = new TreeMap<Integer, Feu>(new TreeComparator());
 		trCentral = new Troncon();
 		this.nom = nom;
+		nbVoiture = 0;
 	}
 
 	@Override
@@ -39,6 +42,7 @@ public class FeuIntersection implements IIntersection {
 			voiture.setVitesse(true, VITESSE_REGLEMENTAIRE);
 			trCentral.entreVoiture(voiture);
 			voiture.setPosition(this);
+			nbVoiture++;
 			Logger.Information(this, "info", voiture.nom + " entre sur le feu " + nom);
 		} catch (ElementOccupeException e) {
 			throw new ElementOccupeException(e.getMessage() + " dans le feu " + nom);
@@ -55,6 +59,8 @@ public class FeuIntersection implements IIntersection {
 		try {
 			connections.get(voiture.direction).entreVoiture(voiture);
 			trCentral.deplacerVoiture(voiture);
+			nbVoiture--;
+			EnvironementEntity.INSTANCE.flash();
 		} catch (ElementOccupeException e) {
 			voiture.arreter(this);
 			Logger.Error(this, "info", e.toString());
@@ -96,6 +102,12 @@ public class FeuIntersection implements IIntersection {
 	@Override
 	public String toString() {
 		return nom;
+	}
+
+	@Override
+	public int[] getNbVoiture() {
+		int[] rep = { nbVoiture };
+		return rep;
 	}
 }
 

@@ -13,10 +13,12 @@ import fr.ensta.simulation.action.DeplacerVoiture;
 public class VoitureEntity extends SimEntity implements IRecordable {
 
 	Voiture voiture;
+	String depart;
 
 	public VoitureEntity(SimEngine engine, String nom, PointES depart, PointES arrive) {
 		super(engine, "Voiture");
 		voiture = new Voiture(nom, depart, arrive);
+		this.depart = depart.toString();
 		Logger.Data(this);
 	}
 
@@ -32,15 +34,17 @@ public class VoitureEntity extends SimEntity implements IRecordable {
 
 	@Override
 	public String[] getTitles() {
-		String[] rep = { "Nom", "Heure", "Situation", "Vitesse", "Direction de deplacement", "Arrive", "Feux Stop" };
+		String[] rep = { "Nom", "Heure", "Depart", "Situation", "Vitesse", "Direction de deplacement", "Arrive",
+				"Feux Stop" };
 		return rep;
 	}
 
 	@Override
 	public String[] getRecords() {
 		String heure = getEngine().SimulationDate().toString();
-		String[] rep = { voiture.nom, heure, voiture.getPosition().toString(), String.valueOf(voiture.getVitesse()),
-				IElement.getDirection(voiture.direction), voiture.getArrive(), String.valueOf(voiture.getFeuxStop()) };
+		String[] rep = { voiture.nom, heure, depart, voiture.getPosition().toString(),
+				String.valueOf(voiture.getVitesse()), IElement.getDirection(voiture.direction), voiture.getArrive(),
+				String.valueOf(voiture.getFeuxStop()) };
 		return rep;
 	}
 
