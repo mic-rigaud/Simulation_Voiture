@@ -10,11 +10,11 @@ import fr.ensta.element.route.troncon.Troncon;
 import fr.ensta.element.voiture.Voiture;
 import fr.ensta.simulation.EnvironementEntity;
 
-public class Stop implements IIntersection {
+public abstract class Stop implements IIntersection {
 
 	private HashMap<Integer, Route> connections;
 	private HashMap<Integer, Boolean> signalisation;
-	private Troncon trCentral;
+	public Troncon trCentral;
 	private String nom;
 	private int nbVoiture;
 
@@ -39,7 +39,7 @@ public class Stop implements IIntersection {
 			trCentral.entreVoiture(voiture);
 			voiture.setPosition(this);
 			nbVoiture++;
-			Logger.Information(this, "info", voiture.nom + " arrive sur le stop " + nom);
+			Logger.Information(this, "info", voiture.nom + " arrive sur lestop " + nom);
 		} catch (ElementOccupeException e) {
 			throw new ElementOccupeException(e.getMessage() + " dans le stop " + nom);
 		}
@@ -65,10 +65,13 @@ public class Stop implements IIntersection {
 	// TODO: lever des exceptions!
 	// la gestion actuelle est simple. La voiture peut rentrer dans l
 	// intersection si il y personne. C'est trop simplifie...
-	private void IntersectionLibre(int position, int newDirection) throws ElementOccupeException {
-		if (!trCentral.isEmpty())
-			throw new ElementOccupeException("intersection non libre");
-	}
+	// private void IntersectionLibre(int position, int newDirection) throws
+	// ElementOccupeException {
+	// if (!trCentral.isEmpty())
+	// throw new ElementOccupeException("intersection non libre");
+	// }
+
+	public abstract void IntersectionLibre(int position, int newDirection) throws ElementOccupeException;
 
 	public void ajouterSignalisation(int direction) {
 		signalisation.put(direction, true);

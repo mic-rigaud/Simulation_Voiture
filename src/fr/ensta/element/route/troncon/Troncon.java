@@ -52,6 +52,10 @@ public class Troncon implements IElement {
 		return voitures.isEmpty();
 	}
 
+	public boolean isEmpty(int direction) {
+		return !voitures.containsKey(direction);
+	}
+
 	@Override
 	public void ajouterConnexion(IElement element, int direction) {
 		// Les troncon n'ont pas de connexion donc pas besoin d implementer

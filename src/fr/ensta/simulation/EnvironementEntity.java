@@ -10,6 +10,7 @@ import enstabretagne.base.utility.Logger;
 import fr.ensta.element.IElement;
 import fr.ensta.element.noeud.intersection.FeuIntersection;
 import fr.ensta.element.noeud.intersection.Stop;
+import fr.ensta.element.noeud.intersection.Stop_v1;
 import fr.ensta.element.noeud.pointEntreSortie.PointES;
 import fr.ensta.element.route.Route;
 import fr.ensta.lerouxlu.simu.SimEngine;
@@ -54,10 +55,10 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 		PointES E5 = new PointES("P5");
 		PointES E6 = new PointES("P6");
 		PointES E7 = new PointES("P7");
-		Stop st1 = new Stop("I1");
-		Stop st2 = new Stop("I2");
-		FeuIntersection st3 = (new FeuEntity(engine, "I3")).getFeu();
-		Stop st4 = new Stop("I4");
+		Stop st1 = new Stop_v1("I1");
+		Stop st2 = new Stop_v1("I2");
+		FeuIntersection st3 = (new FeuEntity(engine, "I3", 1)).getFeu();
+		Stop st4 = new Stop_v1("I4");
 		Route rt11 = new Route(3000, "R1.1");
 		Route rt12 = new Route(1300, "R1.2");
 		Route rt13 = new Route(2000, "R1.3");
@@ -131,13 +132,19 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 		super.activate();
 		Logger.Information(this, "activate", "Environement est active... creation de voiture...");
 
-		int tab[][] = { { 7, 40, 50, 30, 20, 30, 20, 30 }, //
-				{ 2, 300, 200, 100, 100, 400, 50, 30 }, //
-				{ 8, 20, 30, 20, 30, 20, 30, 10 }, //
-				{ 2, 100, 150, 300, 200, 150, 100, 100 }, //
-				{ 5, 20, 30, 15, 50, 20, 10, 10 } };
+		// int tab[][] = { { 7, 40, 50, 30, 20, 30, 20, 30 }, //
+		// { 2, 300, 200, 100, 100, 400, 50, 30 }, //
+		// { 8, 20, 30, 20, 30, 20, 30, 10 }, //
+		// { 2, 100, 150, 300, 200, 150, 100, 100 }, //
+		// { 5, 20, 30, 15, 50, 20, 10, 10 } };
 
-		// int tab[][] = { { 7, 1, 0, 0, 0, 0, 0, 0 } }; //
+		int tab[][] = { { 7, 280, 350, 140, 140, 210, 140, 210 }, //
+				{ 2, 600, 400, 200, 200, 800, 100, 60 }, //
+				{ 8, 160, 240, 160, 240, 160, 240, 80 }, //
+				{ 2, 200, 300, 600, 400, 300, 200, 200 }, //
+				{ 5, 100, 150, 75, 250, 100, 50, 50 } };
+
+		// int tab[][] = { { 1, 1, 0, 0, 0, 0, 0, 0 } }; //
 
 		int time = 0;
 		for (int ind1 = 0; ind1 < tab.length; ind1++) {
@@ -151,6 +158,12 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 			}
 			time = time + tab[ind1][0];
 		}
+		this.addEvent(new AjouterVoiture(
+				getEngine().SimulationDate().add(LogicalDuration.ofHours(time)).add(LogicalDuration.ofSeconds(5)), this,
+				2));
+		this.addEvent(new AjouterVoiture(
+				getEngine().SimulationDate().add(LogicalDuration.ofHours(time)).add(LogicalDuration.ofSeconds(5)), this,
+				3));
 	}
 
 	@Override
@@ -185,6 +198,10 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 		}
 		if (sortie >= entree)
 			sortie++;
+
+		if (entree == 2)
+			sortie = 1;
+
 		Logger.Information(this, "info",
 				"Voiture cree entre :" + String.valueOf(entree + 1) + " sortie : " + String.valueOf(sortie + 1));
 		VoitureEntity voiture = new VoitureEntity(engine, "V" + String.valueOf(nbrVoiture++), pointESs.get(entree),

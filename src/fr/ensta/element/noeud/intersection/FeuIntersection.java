@@ -14,9 +14,9 @@ import fr.ensta.element.route.troncon.Troncon;
 import fr.ensta.element.voiture.Voiture;
 import fr.ensta.simulation.EnvironementEntity;
 
-public class FeuIntersection implements IIntersection {
+public abstract class FeuIntersection implements IIntersection {
 	private HashMap<Integer, Route> connections;
-	private Troncon trCentral;
+	public Troncon trCentral;
 	private String nom;
 	private int token;
 	private TreeMap<Integer, Feu> mapFeu;
@@ -43,16 +43,18 @@ public class FeuIntersection implements IIntersection {
 			trCentral.entreVoiture(voiture);
 			voiture.setPosition(this);
 			nbVoiture++;
-			Logger.Information(this, "info", voiture.nom + " entre sur le feu " + nom);
+			Logger.Information(this, "info", voiture.nom + " entre sur le feu" + nom);
 		} catch (ElementOccupeException e) {
 			throw new ElementOccupeException(e.getMessage() + " dans le feu " + nom);
 		}
 	}
 
-	private void IntersectionLibre(int position, int newDirection) throws ElementOccupeException {
-		if (!trCentral.isEmpty())
-			throw new ElementOccupeException("intersection non libre");
-	}
+	public abstract void IntersectionLibre(int position, int newDirection) throws ElementOccupeException;
+	// private void IntersectionLibre(int position, int newDirection) throws
+	// ElementOccupeException {
+	// if (!trCentral.isEmpty())
+	// throw new ElementOccupeException("intersection non libre");
+	// }
 
 	@Override
 	public void deplacerVoiture(Voiture voiture) {

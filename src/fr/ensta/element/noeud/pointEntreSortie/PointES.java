@@ -27,7 +27,7 @@ public class PointES implements INoeud {
 	@Override
 	public void entreVoiture(Voiture voiture) {
 		voiture.arreter(this);
-		Logger.Information(this, "info", voiture.nom + " est arrivee au point " + nom);
+		Logger.Information(this, "info", voiture.nom + " est arrivee au point" + nom);
 	}
 
 	@Override

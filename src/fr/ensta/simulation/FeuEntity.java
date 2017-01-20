@@ -3,6 +3,8 @@ package fr.ensta.simulation;
 import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.base.utility.IRecordable;
 import fr.ensta.element.noeud.intersection.FeuIntersection;
+import fr.ensta.element.noeud.intersection.FeuIntersection_v1;
+import fr.ensta.element.noeud.intersection.FeuIntersection_v2;
 import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.impl.SimEntity;
 import fr.ensta.simulation.action.ChangerCouleur;
@@ -11,9 +13,12 @@ public class FeuEntity extends SimEntity implements IRecordable {
 
 	private FeuIntersection feu;
 
-	public FeuEntity(SimEngine engine, String nom) {
+	public FeuEntity(SimEngine engine, String nom, int version) {
 		super(engine, "Feu");
-		this.feu = new FeuIntersection(nom);
+		if (version == 1)
+			this.feu = new FeuIntersection_v1(nom);
+		else
+			this.feu = new FeuIntersection_v2(nom);
 		this.start();
 	}
 
