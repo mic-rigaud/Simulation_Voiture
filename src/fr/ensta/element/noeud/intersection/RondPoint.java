@@ -1,71 +1,53 @@
 package fr.ensta.element.noeud.intersection;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 
 import enstabretagne.base.utility.Logger;
 import fr.ensta.element.ElementOccupeException;
 import fr.ensta.element.IElement;
 import fr.ensta.element.route.Route;
-import fr.ensta.element.route.troncon.Troncon;
 import fr.ensta.element.voiture.Voiture;
 import fr.ensta.simulation.EnvironementEntity;
 
-public abstract class Stop implements IIntersection {
+public class RondPoint implements IIntersection {
 
 	private HashMap<Integer, Route> connections;
 	private HashMap<Integer, Boolean> signalisation;
-	public Troncon trCentral;
+	private LinkedList<Voiture> voitures;
 	private String nom;
 	private int nbVoiture;
 
-	public Stop(String nom) {
+	public RondPoint(String nom) {
 		connections = new HashMap<Integer, Route>();
-		signalisation = new HashMap<Integer, Boolean>();
-		trCentral = new Troncon();
+		voitures = new LinkedList<Voiture>();
 		this.nom = nom;
 		nbVoiture = 0;
 	}
 
 	@Override
 	public void entreVoiture(Voiture voiture) throws ElementOccupeException, ArretException {
-		try {
-			if (voiture.getVitesse() != 0 && stop(-voiture.direction)) {
-				throw new ArretException(nom, voiture.nom);
-			}
-			int newDirection = getNewDirection(this.nom, voiture.getArrive());
-			IntersectionLibre(voiture.direction, newDirection);
-			voiture.direction = newDirection;
-			voiture.setVitesse(true, VITESSE_REGLEMENTAIRE);
-			trCentral.entreVoiture(voiture);
-			voiture.setPosition(this);
-			nbVoiture++;
-			Logger.Information(this, "info", voiture.nom + " arrive sur lestop " + nom);
-		} catch (ElementOccupeException e) {
-			throw new ElementOccupeException(e.getMessage() + " dans le stop " + nom);
-		}
+		int newDirection = getNewDirection(this.nom, voiture.getArrive());
+		voiture.direction = newDirection;
+		voiture.setVitesse(true, VITESSE_REGLEMENTAIRE);
+		voitures.add(voiture);
+		voiture.setPosition(this);
+		nbVoiture++;
+		Logger.Information(this, "info", voiture.nom + " arrive sur le rondPoint " + nom);
 	}
 
 	@Override
 	public void deplacerVoiture(Voiture voiture) {
 		try {
 			connections.get(voiture.direction).entreVoiture(voiture);
-			trCentral.deplacerVoiture(voiture);
+			voitures.remove(voiture);
 			nbVoiture--;
 			EnvironementEntity.INSTANCE.flash();
 		} catch (ElementOccupeException e) {
-			voiture.arreter(this);
+			voiture.setPosition(this);
+			voiture.setVitesse(true, voiture.getVitesse());
 			Logger.Error(this, "info", e.toString());
 		}
-	}
-
-	private boolean stop(int direction) {
-		return signalisation.get(direction);
-	}
-
-	public abstract void IntersectionLibre(int position, int newDirection) throws ElementOccupeException;
-
-	public void ajouterSignalisation(int direction) {
-		signalisation.put(direction, true);
 	}
 
 	@Override

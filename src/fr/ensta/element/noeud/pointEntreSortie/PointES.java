@@ -50,7 +50,6 @@ public class PointES implements INoeud {
 
 	@Override
 	public int[] getNbVoiture() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

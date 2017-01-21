@@ -67,7 +67,6 @@ public class Troncon implements IElement {
 
 	@Override
 	public int[] getNbVoiture() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
