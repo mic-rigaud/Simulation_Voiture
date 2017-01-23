@@ -13,7 +13,6 @@ import fr.ensta.simulation.EnvironementEntity;
 public class RondPoint implements IIntersection {
 
 	private HashMap<Integer, Route> connections;
-	private HashMap<Integer, Boolean> signalisation;
 	private LinkedList<Voiture> voitures;
 	private String nom;
 	private int nbVoiture;
@@ -53,7 +52,6 @@ public class RondPoint implements IIntersection {
 	@Override
 	public void ajouterConnexion(IElement element, int direction) {
 		connections.put(direction, (Route) element);
-		signalisation.put(direction, false);
 	}
 
 	@Override

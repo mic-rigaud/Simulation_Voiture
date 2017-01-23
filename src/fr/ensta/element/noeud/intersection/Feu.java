@@ -23,11 +23,11 @@ public class Feu {
 	public int tempsAttente() {
 		switch (couleur) {
 		case ROUGE:
-			return 3;
+			return 6; // ref : 3
 		case ORANGE:
-			return 5;
+			return 10; // ref : 5
 		case VERT:
-			return 30;
+			return 15; // ref : 30
 		default:
 			return 0;
 		}
