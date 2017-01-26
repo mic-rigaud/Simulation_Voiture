@@ -2,9 +2,9 @@ package fr.ensta.element.noeud.intersection;
 
 import fr.ensta.element.ElementOccupeException;
 
-public class FeuIntersection_v1 extends FeuIntersection {
+public class StopV1 extends Stop {
 
-	public FeuIntersection_v1(String nom) {
+	public StopV1(String nom) {
 		super(nom);
 	}
 
