@@ -1,5 +1,9 @@
 package fr.ensta.simulation;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -8,7 +12,9 @@ import enstabretagne.base.time.LogicalDuration;
 import enstabretagne.base.utility.IRecordable;
 import enstabretagne.base.utility.Logger;
 import fr.ensta.element.IElement;
+import fr.ensta.element.noeud.INoeud;
 import fr.ensta.element.noeud.intersection.FeuIntersection;
+import fr.ensta.element.noeud.intersection.RondPoint;
 import fr.ensta.element.noeud.intersection.Stop;
 import fr.ensta.element.noeud.intersection.StopV1;
 import fr.ensta.element.noeud.pointEntreSortie.PointES;
@@ -17,6 +23,8 @@ import fr.ensta.lerouxlu.simu.SimEngine;
 import fr.ensta.lerouxlu.simu.impl.SimEntity;
 import fr.ensta.simulation.action.AjouterVoiture;
 import fr.ensta.simulation.action.DeplacerVoiture;
+import json.JSONArray;
+import json.JSONObject;
 
 public class EnvironementEntity extends SimEntity implements IRecordable {
 
@@ -47,83 +55,92 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 	}
 
 	private void initialiserPlateau() {
-		// TODO: faire depuis un fichier conf
-		PointES E1 = new PointES("P1");
-		PointES E2 = new PointES("P2");
-		PointES E3 = new PointES("P3");
-		PointES E4 = new PointES("P4");
-		PointES E5 = new PointES("P5");
-		PointES E6 = new PointES("P6");
-		PointES E7 = new PointES("P7");
-		Stop st1 = new StopV1("I1");
-		Stop st2 = new StopV1("I2");
-		FeuIntersection st3 = (new FeuEntity(engine, "I3", 1)).getFeu();
-		Stop st4 = new StopV1("I4");
-		// RondPoint st1 = new RondPoint("I1");
-		// RondPoint st2 = new RondPoint("I2");
-		// RondPoint st3 = new RondPoint("I3");
-		// RondPoint st4 = new RondPoint("I4");
-		Route rt11 = new Route(3000, "R1.1");
-		Route rt12 = new Route(1300, "R1.2");
-		Route rt13 = new Route(2000, "R1.3");
-		Route rt2 = new Route(4500, "R2");
-		Route rt21 = new Route(4500, "R2.1");
-		Route rt22 = new Route(800, "R2.2");
-		Route rt23 = new Route(1400, "R2.3");
-		Route rt31 = new Route(3500, "R3.1");
-		Route rt32 = new Route(1000, "R3.2");
-		Route rt4 = new Route(3000, "R4");
 
-		E1.connecter(rt11, IElement.DROITE);
-		E2.connecter(rt2, IElement.HAUT);
-		E3.connecter(rt13, IElement.GAUCHE);
-		E4.connecter(rt23, IElement.GAUCHE);
-		E5.connecter(rt21, IElement.DROITE);
-		E6.connecter(rt32, IElement.BAS);
-		E7.connecter(rt4, IElement.BAS);
+		try {
+			BufferedReader buff = new BufferedReader(new FileReader("CONFIG.json"));
+			String str = null;
+			String lignes = "";
+			while ((str = buff.readLine()) != null) {
+				// System.out.println(str);
+				lignes += str;
+			}
+			JSONArray json = new JSONArray(lignes);
+			for (int i = 0; i < json.length(); i++) {
+				JSONObject element = json.getJSONObject(i);
+				switch (element.get("id").toString()) {
+				case "route":
+					Route rt = new Route(element.getInt("distance"), element.getString("name"));
+					elements.add(rt);
+					break;
+				case "pointes":
+					PointES E = new PointES(element.getString("name"));
+					ajoutConnection(E, element.getJSONObject("connections"));
+					pointESs.add(E);
+					break;
+				case "stop":
+					Stop st = new StopV1(element.getString("name"));
+					JSONObject signalisation = element.getJSONObject("signalisation");
+					ajoutSignalisation(st, element.getJSONObject("signalisation"));
+					ajoutConnection(st, element.getJSONObject("connections"));
+					elements.add(st);
+					break;
+				case "feu":
+					FeuIntersection feu = (new FeuEntity(engine, element.getString("name"), 1)).getFeu();
+					ajoutConnection(feu, element.getJSONObject("connections"));
+					elements.add(feu);
+					break;
+				case "rondpoint":
+					RondPoint rp = new RondPoint(element.getString("name"));
+					ajoutConnection(rp, element.getJSONObject("connections"));
+					elements.add(rp);
+					break;
+				default:
+					System.out.println("prob");
+				}
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-		st1.connecter(rt11, IElement.GAUCHE);
-		st1.connecter(rt12, IElement.DROITE);
-		st1.connecter(rt31, IElement.HAUT);
-		st2.connecter(rt12, IElement.GAUCHE);
-		st2.connecter(rt13, IElement.DROITE);
-		st2.connecter(rt2, IElement.BAS);
-		st3.connecter(rt22, IElement.GAUCHE);
-		st3.connecter(rt23, IElement.DROITE);
-		st3.connecter(rt4, IElement.HAUT);
-		st4.connecter(rt21, IElement.GAUCHE);
-		st4.connecter(rt22, IElement.DROITE);
-		st4.connecter(rt32, IElement.HAUT);
-		st4.connecter(rt31, IElement.BAS);
+	private void ajoutSignalisation(Stop st, JSONObject signalisation) {
+		if (signalisation.has("bas"))
+			st.ajouterSignalisation(IElement.BAS);
+		if (signalisation.has("haut"))
+			st.ajouterSignalisation(IElement.HAUT);
+		if (signalisation.has("gauche"))
+			st.ajouterSignalisation(IElement.GAUCHE);
+		if (signalisation.has("droite"))
+			st.ajouterSignalisation(IElement.DROITE);
+	}
 
-		st4.ajouterSignalisation(IElement.BAS);
-		st4.ajouterSignalisation(IElement.HAUT);
-		st1.ajouterSignalisation(IElement.HAUT);
-		st2.ajouterSignalisation(IElement.BAS);
-		// st3.ajouterSignalisation(IElement.HAUT);
-
-		pointESs.add(E1);
-		pointESs.add(E2);
-		pointESs.add(E3);
-		pointESs.add(E4);
-		pointESs.add(E5);
-		pointESs.add(E6);
-		pointESs.add(E7);
-		elements.add(rt11);
-		elements.add(rt12);
-		elements.add(rt13);
-		elements.add(rt21);
-		elements.add(rt22);
-		elements.add(rt23);
-		elements.add(rt31);
-		elements.add(rt32);
-		elements.add(rt4);
-		elements.add(rt2);
-		elements.add(st1);
-		elements.add(st2);
-		elements.add(st3);
-		elements.add(st4);
-
+	private void ajoutConnection(INoeud el, JSONObject connection) {
+		if (connection.has("bas"))
+			for (IElement e : elements) {
+				if (e.toString().equals(connection.get("bas"))) {
+					el.connecter((Route) e, IElement.BAS);
+				}
+			}
+		if (connection.has("haut"))
+			for (IElement e : elements) {
+				if (e.toString().equals(connection.get("haut"))) {
+					el.connecter((Route) e, IElement.HAUT);
+				}
+			}
+		if (connection.has("gauche"))
+			for (IElement e : elements) {
+				if (e.toString().equals(connection.get("gauche"))) {
+					el.connecter((Route) e, IElement.GAUCHE);
+				}
+			}
+		if (connection.has("droite"))
+			for (IElement e : elements) {
+				if (e.toString().equals(connection.get("droite"))) {
+					el.connecter((Route) e, IElement.DROITE);
+				}
+			}
 	}
 
 	@Override
@@ -136,19 +153,19 @@ public class EnvironementEntity extends SimEntity implements IRecordable {
 		super.activate();
 		Logger.Information(this, "activate", "Environement est active... creation de voiture...");
 
-		int tab[][] = { { 7, 40, 50, 30, 20, 30, 20, 30 }, //
-				{ 2, 300, 200, 100, 100, 400, 50, 30 }, //
-				{ 8, 20, 30, 20, 30, 20, 30, 10 }, //
-				{ 2, 100, 150, 300, 200, 150, 100, 100 }, //
-				{ 5, 20, 30, 15, 50, 20, 10, 10 } };
+		// int tab[][] = { { 7, 40, 50, 30, 20, 30, 20, 30 }, //
+		// { 2, 300, 200, 100, 100, 400, 50, 30 }, //
+		// { 8, 20, 30, 20, 30, 20, 30, 10 }, //
+		// { 2, 100, 150, 300, 200, 150, 100, 100 }, //
+		// { 5, 20, 30, 15, 50, 20, 10, 10 } };
 
-		// int tab[][] = { { 7, 280, 350, 140, 140, 210, 140, 210 }, //
-		// { 2, 600, 400, 200, 200, 800, 100, 60 }, //
-		// { 8, 160, 240, 160, 240, 160, 240, 80 }, //
-		// { 2, 200, 300, 600, 400, 300, 200, 200 }, //
-		// { 5, 100, 150, 75, 250, 100, 50, 50 } };
+		int tab[][] = { { 7, 280, 350, 140, 140, 210, 140, 210 }, //
+				{ 2, 600, 400, 200, 200, 800, 100, 60 }, //
+				{ 8, 160, 240, 160, 240, 160, 240, 80 }, //
+				{ 2, 200, 300, 600, 400, 300, 200, 200 }, //
+				{ 5, 100, 150, 75, 250, 100, 50, 50 } };
 
-		// int tab[][] = { { 1, 5, 0, 0, 0, 0, 0, 0 } }; //
+		// int tab[][] = { { 1, 1, 0, 0, 0, 0, 0, 0 } }; //
 
 		int time = 0;
 		for (int ind1 = 0; ind1 < tab.length; ind1++) {

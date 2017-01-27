@@ -1,150 +1,148 @@
-{
-    "graphe":[
-        {
-            "id": "route",
-            "name":"R1.1",
-            "distance": 3000
+[
+    {
+        "id": "route",
+        "name":"R1.1",
+        "distance": 3000
+    },
+    {
+        "id": "route",
+        "name":"R1.2",
+        "distance":1300
+    },
+    {
+        "id": "route",
+        "name":"R1.3",
+        "distance":2000
+    },
+    {
+        "id": "route",
+        "name":"R2",
+        "distance":4500
+    },
+    {
+        "id": "route",
+        "name":"R2.1",
+        "distance":4500
+    },
+    {
+        "id": "route",
+        "name":"R2.2",
+        "distance":800
+    },
+    {
+        "id": "route",
+        "name":"R2.3",
+        "distance":1400
+    },
+    {
+        "id": "route",
+        "name":"R3.1",
+        "distance":3500
+    },
+    {
+        "id": "route",
+        "name":"R3.2",
+        "distance":1000
+    },
+    {
+        "id": "route",
+        "name":"R4",
+        "distance":3000
+    },
+    {
+        "id": "pointes",
+        "name":"P1",
+        "connections":{
+            "droite":"R1.1"
+        }
+    },
+    {
+        "id": "pointes",
+        "name":"P2",
+        "connections":{
+            "haut":"R2"
+        }
+    },
+    {
+        "id": "pointes",
+        "name":"P3",
+        "connections":{
+            "gauche":"R1.3"
+        }
+    },
+    {
+        "id": "pointes",
+        "name":"P4",
+        "connections":{
+            "gauche":"R2.3"
+        }
+    },
+    {
+        "id": "pointes",
+        "name":"P5",
+        "connections":{
+            "droite":"R2.1"
+        }
+    },
+    {
+        "id": "pointes",
+        "name":"P6",
+        "connections":{
+            "bas":"R3.2"
+        }
+    },
+    {
+        "id": "pointes",
+        "name":"P7",
+        "connections":{
+            "bas":"R4"
+        }
+    },
+    {
+        "id": "stop",
+        "name":"I1",
+        "connections":{
+            "gauche":"R1.1",
+            "droite":"R1.2",
+            "haut":"R3.1"
         },
-        {
-            "id": "route",
-            "name":"R1.2",
-            "distance":1300
+        "signalisation":{
+            "haut":true
+        }
+    },
+    {
+        "id": "stop",
+        "name":"I2",
+        "connections":{
+            "droite":"R1.3",
+            "bas":"R2",
+            "gauche":"R1.2"
         },
-        {
-            "id": "route",
-            "name":"R1.3",
-            "distance":2000
+        "signalisation":{
+            "bas":true
+        }
+    },
+    {
+        "id": "feu",
+        "name":"I3",
+        "connections":{
+            "droite":"R2.3",
+            "haut":"R4",
+            "gauche":"R2.2"
+        }
+    },
+    {
+        "id": "stop",
+        "name":"I4",
+        "connections":{
+            "droite":"R2.2",
+            "bas":"R3.1",
+            "gauche":"R2.1",
+            "haut":"R3.2"
         },
-        {
-            "id": "route",
-            "name":"R2",
-            "distance":4500
-        },
-        {
-            "id": "route",
-            "name":"R2.1",
-            "distance":4500
-        },
-        {
-            "id": "route",
-            "name":"R2.2",
-            "distance":800
-        },
-        {
-            "id": "route",
-            "name":"R2.3",
-            "distance":1400
-        },
-        {
-            "id": "route",
-            "name":"R3.1",
-            "distance":3500
-        },
-        {
-            "id": "route",
-            "name":"R3.2",
-            "distance":1000
-        },
-        {
-            "id": "route",
-            "name":"R4",
-            "distance":3000
-        },
-        {
-            "id": "pointes",
-            "name":"P1",
-            "connections":{
-                "droite":"R1.1"
-            }
-        },
-        {
-            "id": "pointes",
-            "name":"P2",
-            "connections":{
-                "haut":"R2"
-            }
-        },
-        {
-            "id": "pointes",
-            "name":"P3",
-            "connections":{
-                "gauche":"R1.3"
-            }
-        },
-        {
-            "id": "pointes",
-            "name":"P4",
-            "connections":{
-                "gauche":"R2.3"
-            }
-        },
-        {
-            "id": "pointes",
-            "name":"P5",
-            "connections":{
-                "droite":"R2.1"
-            }
-        },
-        {
-            "id": "pointes",
-            "name":"P6",
-            "connections":{
-                "bas":"R3.2"
-            }
-        },
-        {
-            "id": "pointes",
-            "name":"P7",
-            "connections":{
-                "bas":"R4"
-            }
-        },
-        {
-            "id": "stop",
-            "name":"I1",
-            "connection":{
-                "droite":"R1.1",
-                "gauche":"R1.2",
-                "haut":"R3.1"
-            },
-            "signalisation":{
-                "haut":true
-            }
-        },
-        {
-            "id": "stop",
-            "name":"I2",
-            "connection":{
-                "droite":"R1.3",
-                "bas":"R2",
-                "gauche":"R1.2"
-            },
-            "signalisation":{
-                "bas":true
-            }
-        },
-        {
-            "id": "feu",
-            "name":"I3",
-            "connection":{
-                "droite":"R2.3",
-                "haut":"R4",
-                "gauche":"R2.2"
-            }
-        },
-        {
-            "id": "stop",
-            "name":"I4",
-            "connection":{
-                "droite":"R2.2",
-                "bas":"R3.1",
-                "gauche":"R2.1",
-                "haut":"R3.2"
-            },
-            "signalisation":{
-                "bas":true,
-                "haut":true
-            }
-        },
-    ]
-}
+        "signalisation":{
+            "bas":true,
+            "haut":true
+        }
+    },
+]
